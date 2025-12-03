@@ -9,8 +9,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
 
 public class CreateAccountTest {
     @BeforeAll
@@ -23,17 +25,20 @@ public class CreateAccountTest {
     @Test
     public void userCanCreateAccountTest() {
         // создание пользователя
+        String username = "user_" + UUID.randomUUID().toString().substring(0, 8);
+        String user = String.format("""
+                {
+                "username": "%s",
+                "password": "Qwerty1!",
+                "role": "USER"
+                }
+                """, username);
+
         given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("Authorization", "Basic YWRtaW46YWRtaW4=")
-                .body("""
-                        {
-                            "username": "Milana1!",
-                            "password": "Qwerty1!",
-                            "role": "USER"
-                        }
-                        """)
+                .body(user)
                 .post("http://localhost:4111/api/v1/admin/users")
                 .then()
                 .assertThat()
@@ -43,12 +48,7 @@ public class CreateAccountTest {
         String userAuthHeader = given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .body("""
-                        {
-                            "username": "Milana1!",
-                            "password": "Qwerty1!"
-                        }
-                        """)
+                .body(user)
                 .post("http://localhost:4111/api/v1/auth/login")
                 .then()
                 .assertThat()
@@ -67,6 +67,14 @@ public class CreateAccountTest {
                 .statusCode(HttpStatus.SC_CREATED);
 
         // запросить все аккаунты пользователя и проверить, что наш аккаунт там
-
+        given()
+                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get("http://localhost:4111/api/v1/admin/users")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("username", hasItem(username));
     }
 }
