@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class CreateUserTest {
     @BeforeAll
@@ -50,9 +51,13 @@ public class CreateUserTest {
     public static Stream<Arguments> userInvalidData() {
         return Stream.of(
                 // username field validation
-                Arguments.of("  ", "Password1!", "USER", "username"),
-                Arguments.of("ab", "Password1!", "USER", "username", "Username must be between 3 and 15 characters"),
-                Arguments.of("ab%", "Password1!", "USER", "username", "Username must contain only letters, digits, dashes, underscores, and dots")
+                Arguments.of("  ", "Password1!", "USER", "username",
+                        new String[]{"Username must be between 3 and 15 characters", "Username cannot be blank",
+                                "Username must contain only letters, digits, dashes, underscores, and dots"}),
+                Arguments.of("ab", "Password1!", "USER", "username",
+                        new String[]{"Username must be between 3 and 15 characters"}),
+                Arguments.of("ab%", "Password1!", "USER", "username",
+                        new String[]{"Username must contain only letters, digits, dashes, underscores, and dots"})
         );
     }
 
@@ -76,6 +81,6 @@ public class CreateUserTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(errorKey, Matchers.equalTo(errorValue));
+                .body(errorKey, containsInAnyOrder(errorValue));
     }
 }
