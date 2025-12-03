@@ -1,0 +1,141 @@
+### Positive test: user can deposit money into his account with balance 0.01
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": 0.01
+}
+
+### Positive test: user can deposit money into his account with balance 5000
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": 5000
+}
+
+### Negative test: user cannot deposit money into his account with balance 0
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": 0
+}
+
+### Negative test: user cannot deposit money into his account with balance -1
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": -1
+}
+
+### Negative test: user cannot deposit money into his account with balance 5000.01
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": 5000.01
+}
+
+### Negative test: user cannot deposit money into someone's account
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 2,
+  "balance": 4500
+}
+
+### Positive test: user can transfer money into his account (amount 0..10000)
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 1,
+  "amount": 5000
+}
+
+### Positive test: user can transfer money into his account (amount 0..10000)
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 10000
+}
+
+### Negative test: user cannot transfer money into his account with a balance greater than his balance
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 1,
+  "amount": 8000
+}
+
+### Negative test: user cannot transfer money into his account with a balance greater than his balance
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 8000
+}
+
+### Negative test: user cannot transfer money with amount hight 10000
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 1,
+  "amount": 10000.01
+}
+
+### Positive test: user can change his name
+PUT localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "name": "Mike Black"
+}
+
+### Negative test: The user can change the name if it not two words
+PUT localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "name": "RobTomas"
+}
+
+### Negative test: The user cannot change the name if it not only letters
+PUT localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "name": "Mike Black2"
+}
