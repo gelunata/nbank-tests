@@ -7,10 +7,10 @@ import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -26,24 +26,26 @@ public class CreateUserTest {
                         new ResponseLoggingFilter()));
     }
 
-    @Test
-    public void adminCanCreateUserWithCorrectData() {
+    @ParameterizedTest
+    @ValueSource(strings = {"abc", "123", "---", "___", "..."})
+    //Username must contain only letters, digits, dashes, underscores, and dots
+    public void adminCanCreateUserWithCorrectData(String username) {
         given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .header("Authorization", "Basic YWRtaW46YWRtaW4=")
-                .body("""
+                .body(String.format("""
                         {
-                        "username": "Milana1#",
-                        "password": "Qwerty1!",
-                        "role": "USER"
+                            "username": "%s",
+                            "password": "Qwerty1!",
+                            "role": "USER"
                         }
-                        """)
+                        """, username))
                 .post("http://localhost:4111/api/v1/admin/users")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .body("username", Matchers.equalTo("Milana1#"))
+                .body("username", Matchers.equalTo(username))
                 .body("username", Matchers.not(Matchers.equalTo("Qwerty1!")))
                 .body("role", Matchers.equalTo("USER"));
     }
