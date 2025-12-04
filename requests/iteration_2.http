@@ -18,6 +18,16 @@ authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
   "balance": 5000
 }
 
+### Positive test: user can deposit money into his account with balance 4999.99
+POST localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "id": 1,
+  "balance": 4999.99
+}
+
 ### Negative test: user cannot deposit money into his account with balance 0
 POST localhost:4111/api/v1/accounts/deposit
 Content-Type: application/json
@@ -58,7 +68,7 @@ authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
   "balance": 4500
 }
 
-### Positive test: user can transfer money into his account (amount 0..10000)
+### Positive test: user can transfer money into his account with amount = 0.01
 POST localhost:4111/api/v1/accounts/transfer
 Content-Type: application/json
 authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
@@ -66,10 +76,21 @@ authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
 {
   "senderAccountId": 1,
   "receiverAccountId": 1,
-  "amount": 5000
+  "amount": 0.01
 }
 
-### Positive test: user can transfer money into his account (amount 0..10000)
+### Positive test: user can transfer money into his account with amount = 9999.99
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 9999.99
+}
+
+### Positive test: user can transfer money into his account with amount = 10000
 POST localhost:4111/api/v1/accounts/transfer
 Content-Type: application/json
 authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
@@ -99,7 +120,29 @@ authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
 {
   "senderAccountId": 1,
   "receiverAccountId": 2,
-  "amount": 8000
+  "amount": 9999.99
+}
+
+### Negative test: user cannot transfer money with amount = 0
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 1,
+  "amount": 0
+}
+
+### Negative test: user cannot transfer money with amount < 0
+POST localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+authorization: Basic Sm9oblJpY2g6cXdlcnRZMSE=
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 1,
+  "amount": -1
 }
 
 ### Negative test: user cannot transfer money with amount hight 10000
