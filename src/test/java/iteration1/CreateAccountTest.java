@@ -57,24 +57,29 @@ public class CreateAccountTest {
                 .header("Authorization");
 
         // создаем аккаунт (счет)
-        given()
+        int id = given()
                 .header("Authorization", userAuthHeader)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .post("http://localhost:4111/api/v1/accounts")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.SC_CREATED);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract()
+                .response()
+                .jsonPath()
+                .getInt("id");
 
         // запросить все аккаунты пользователя и проверить, что наш аккаунт там
         given()
-                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
+                .header("Authorization", userAuthHeader)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
-                .get("http://localhost:4111/api/v1/admin/users")
+                .get("http://localhost:4111/api/v1/customer/accounts")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("username", hasItem(username));
+                //.extract()
+                .body("id", hasItem(id));
     }
 }
