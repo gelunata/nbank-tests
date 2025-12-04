@@ -79,7 +79,6 @@ public class CreateAccountTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                //.extract()
                 .body("id", hasItem(id));
     }
 }
