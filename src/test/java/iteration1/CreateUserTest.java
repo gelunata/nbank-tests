@@ -1,88 +1,60 @@
 package iteration1;
 
-import io.restassured.RestAssured;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.http.ContentType;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
+import generators.RandomData;
+import models.CreateUserRequest;
+import models.CreateUserResponse;
+import models.UserRole;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import requests.AdminCreateUserRequester;
+import specs.RequestSpecs;
+import specs.ResponseSpecs;
 
-import java.util.List;
 import java.util.stream.Stream;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+public class CreateUserTest extends BaseTest {
+    @Test
+    public void adminCanCreateUserWithCorrectData() {
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .username(RandomData.getUsername())
+                .password(RandomData.getPassword())
+                .role(UserRole.USER.toString())
+                .build();
 
-public class CreateUserTest {
-    @BeforeAll
-    public static void setupRestAssured() {
-        RestAssured.filters(
-                List.of(new RequestLoggingFilter(),
-                        new ResponseLoggingFilter()));
-    }
+        CreateUserResponse createUserResponse =
+                new AdminCreateUserRequester(RequestSpecs.adminSpec(), ResponseSpecs.entityWasCreated())
+                        .post(createUserRequest)
+                        .extract()
+                        .as(CreateUserResponse.class);
 
-    @ParameterizedTest
-    @ValueSource(strings = {"abc", "123", "---", "___", "..."})
-    //Username must contain only letters, digits, dashes, underscores, and dots
-    public void adminCanCreateUserWithCorrectData(String username) {
-        given()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
-                .body(String.format("""
-                        {
-                            "username": "%s",
-                            "password": "Qwerty1!",
-                            "role": "USER"
-                        }
-                        """, username))
-                .post("http://localhost:4111/api/v1/admin/users")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .body("username", Matchers.equalTo(username))
-                .body("username", Matchers.not(Matchers.equalTo("Qwerty1!")))
-                .body("role", Matchers.equalTo("USER"));
+        softly.assertThat(createUserRequest.getUsername()).isEqualTo(createUserResponse.getUsername());
+        softly.assertThat(createUserRequest.getPassword()).isNotEqualTo(createUserResponse.getPassword());
+        softly.assertThat(createUserRequest.getRole()).isEqualTo(createUserResponse.getRole());
     }
 
     public static Stream<Arguments> userInvalidData() {
         return Stream.of(
                 // username field validation
-                Arguments.of("  ", "Password1!", "USER", "username",
-                        new String[]{"Username must be between 3 and 15 characters", "Username cannot be blank",
-                                "Username must contain only letters, digits, dashes, underscores, and dots"}),
-                Arguments.of("ab", "Password1!", "USER", "username",
-                        new String[]{"Username must be between 3 and 15 characters"}),
-                Arguments.of("ab%", "Password1!", "USER", "username",
-                        new String[]{"Username must contain only letters, digits, dashes, underscores, and dots"})
+                Arguments.of("   ", "Password33$", "USER", "username", "Username cannot be blank"),
+                Arguments.of("ab", "Password33$", "USER", "username", "Username must be between 3 and 15 characters"),
+                Arguments.of("abc$", "Password33$", "USER", "username", "Username must contain only letters, digits, dashes, underscores, and dots"),
+                Arguments.of("abc%", "Password33$", "USER", "username", "Username must contain only letters, digits, dashes, underscores, and dots")
         );
     }
 
     @MethodSource("userInvalidData")
     @ParameterizedTest
-    public void adminCanNotCreateUserWithInvalidData(String username, String password, String role, String errorKey, String[] errorValue) {
-        String requestBody = String.format("""
-                {
-                    "username": "%s",
-                    "password": "%s",
-                    "role": "%s"
-                }
-                """, username, password, role);
+    public void adminCanNotCreateUserWithInvalidData(String username, String password, String role, String errorKey, String errorValue) {
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .username(username)
+                .password(password)
+                .role(role)
+                .build();
 
-        given()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
-                .body(requestBody)
-                .post("http://localhost:4111/api/v1/admin/users")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(errorKey, containsInAnyOrder(errorValue));
+        new AdminCreateUserRequester(RequestSpecs.adminSpec(),
+                ResponseSpecs.requestReturnsBadRequest(errorKey, errorValue))
+                .post(createUserRequest);
     }
 }
