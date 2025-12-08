@@ -6,8 +6,11 @@ import models.UserRole;
 import org.junit.jupiter.api.Test;
 import requests.AdminCreateUserRequester;
 import requests.CreateAccountRequester;
+import requests.GetAccountRequester;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
+
+import static org.hamcrest.Matchers.hasItem;
 
 public class CreateAccountTest {
 
@@ -24,13 +27,22 @@ public class CreateAccountTest {
                 ResponseSpecs.entityWasCreated())
                 .post(userRequest);
 
-        new CreateAccountRequester(
+        int id = new CreateAccountRequester(
                 RequestSpecs.authAsUser(
                         userRequest.getUsername(),
                         userRequest.getPassword()),
                 ResponseSpecs.entityWasCreated())
-                .post(null);
+                .post(null)
+                .extract()
+                .path("id");
 
-        // запросить все аккаунты пользователя и проверить, что наш аккаунт там
+
+        new GetAccountRequester(
+                RequestSpecs.authAsUser(
+                        userRequest.getUsername(),
+                        userRequest.getPassword()),
+                ResponseSpecs.requestReturnsOK())
+                .get(null)
+                .body("id", hasItem(id));
     }
 }
