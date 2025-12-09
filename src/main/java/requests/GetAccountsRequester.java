@@ -7,8 +7,8 @@ import models.BaseModel;
 
 import static io.restassured.RestAssured.given;
 
-public class GetAccountRequester extends GetRequest {
-    public GetAccountRequester(RequestSpecification requestSpecification, ResponseSpecification responseSpecification) {
+public class GetAccountsRequester extends GetRequest {
+    public GetAccountsRequester(RequestSpecification requestSpecification, ResponseSpecification responseSpecification) {
         super(requestSpecification, responseSpecification);
     }
 

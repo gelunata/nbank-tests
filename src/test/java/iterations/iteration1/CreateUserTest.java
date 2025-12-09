@@ -1,10 +1,10 @@
-package iteration1;
+package iterations.iteration1;
 
 import generators.RandomData;
+import iterations.BaseTest;
 import models.CreateUserRequest;
 import models.CreateUserResponse;
 import models.UserRole;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

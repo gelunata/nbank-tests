@@ -1,4 +1,4 @@
-package iteration1;
+package iterations.iteration1;
 
 import generators.RandomData;
 import models.CreateUserRequest;
@@ -6,7 +6,7 @@ import models.UserRole;
 import org.junit.jupiter.api.Test;
 import requests.AdminCreateUserRequester;
 import requests.CreateAccountRequester;
-import requests.GetAccountRequester;
+import requests.GetAccountsRequester;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
@@ -36,8 +36,7 @@ public class CreateAccountTest {
                 .extract()
                 .path("id");
 
-
-        new GetAccountRequester(
+        new GetAccountsRequester(
                 RequestSpecs.authAsUser(
                         userRequest.getUsername(),
                         userRequest.getPassword()),
