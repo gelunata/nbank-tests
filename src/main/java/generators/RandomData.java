@@ -15,4 +15,8 @@ public class RandomData {
                 RandomStringUtils.randomAlphanumeric(5).toLowerCase() +
                 RandomStringUtils.randomNumeric(3) + "%$#";
     }
+
+    public static double getDepositAmount(){
+        return (double) Math.round(Math.random() * 5000 * 100) / 100;
+    }
 }

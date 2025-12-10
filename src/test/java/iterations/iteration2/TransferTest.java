@@ -1,5 +1,6 @@
 package iterations.iteration2;
 
+import generators.RandomData;
 import iterations.BaseTest;
 import methods.Account;
 import methods.Deposit;
@@ -52,7 +53,7 @@ public class TransferTest extends BaseTest {
 
     @Test
     public void userCanTransferMoneyToSomeonesAccountTest() {
-        double amount = (double) Math.round(Math.random() * 5000 * 100) / 100;
+        double amount = RandomData.getDepositAmount();
         String userAuthorization1 = User.create();
         String userAuthorization2 = User.create();
 
@@ -72,7 +73,7 @@ public class TransferTest extends BaseTest {
 
     @Test
     public void userCannotTransferMoneyFromAccountThatIsLessThanAmountBeingTransferredTest() {
-        double amount = (double) Math.round(Math.random() * 5000 * 100) / 100;
+        double amount = RandomData.getDepositAmount();
         String userAuthorization = User.create();
 
         long senderId = Account.create(userAuthorization);
