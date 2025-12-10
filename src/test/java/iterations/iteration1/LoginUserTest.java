@@ -1,4 +1,4 @@
-package iteration1;
+package iterations.iteration1;
 
 import generators.RandomData;
 import models.CreateUserRequest;
@@ -11,7 +11,7 @@ import requests.LoginUserRequester;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
-public class LoginUserTest extends BaseTest {
+public class LoginUserTest {
     @Test
     public void adminCanGenerateAuthTokenTest() {
         LoginUserRequest userRequest = LoginUserRequest.builder()
@@ -43,6 +43,6 @@ public class LoginUserTest extends BaseTest {
                 ResponseSpecs.requestReturnsOK())
                 .post(LoginUserRequest.builder()
                         .username(userRequest.getUsername()).password(userRequest.getPassword()).build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(ResponseSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
     }
 }

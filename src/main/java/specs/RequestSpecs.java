@@ -34,16 +34,20 @@ public class RequestSpecs {
                 .build();
     }
 
+    public static RequestSpecification authAsUser(String userAuthHeader) {
+        return defaultRequestBuilder()
+                .addHeader("Authorization", userAuthHeader)
+                .build();
+    }
+
     public static RequestSpecification authAsUser(String username, String password) {
         String userAuthHeader = new LoginUserRequester(
                 RequestSpecs.unauthSpec(),
                 ResponseSpecs.requestReturnsOK())
                 .post(LoginUserRequest.builder().username(username).password(password).build())
                 .extract()
-                .header("Authorization");
+                .header(ResponseSpecs.AUTHORIZATION_HEADER);
 
-        return defaultRequestBuilder()
-                .addHeader("Authorization", userAuthHeader)
-                .build();
+        return authAsUser(userAuthHeader);
     }
 }
