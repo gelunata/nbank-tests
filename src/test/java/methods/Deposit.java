@@ -7,7 +7,7 @@ import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
 public class Deposit {
-    private static void depositMoney(String userAuthorization, int accountId, double amount, ResponseSpecification response) {
+    private static void depositMoney(String userAuthorization, long accountId, double amount, ResponseSpecification response) {
         DepositRequest depositRequest = DepositRequest.builder()
                 .id(accountId)
                 .balance(amount)
@@ -19,15 +19,15 @@ public class Deposit {
                 .post(depositRequest);
     }
 
-    public static void returnsOK(String userAuthorization, int accountId, double amount) {
+    public static void returnsOK(String userAuthorization, long accountId, double amount) {
         depositMoney(userAuthorization, accountId, amount, ResponseSpecs.requestReturnsOK());
     }
 
-    public static void returnsBadRequest(String userAuthorization, int accountId, double amount) {
+    public static void returnsBadRequest(String userAuthorization, long accountId, double amount) {
         depositMoney(userAuthorization, accountId, amount, ResponseSpecs.requestReturnsBadRequest());
     }
 
-    public static void returnsForbidden(String userAuthorization, int accountId, double amount) {
+    public static void returnsForbidden(String userAuthorization, long accountId, double amount) {
         depositMoney(userAuthorization, accountId, amount, ResponseSpecs.requestReturnsForbidden());
     }
 }

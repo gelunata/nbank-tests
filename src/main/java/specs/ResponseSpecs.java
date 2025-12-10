@@ -7,6 +7,8 @@ import org.apache.http.HttpStatus;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class ResponseSpecs {
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private ResponseSpecs() {
     }
 

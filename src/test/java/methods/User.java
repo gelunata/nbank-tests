@@ -20,6 +20,6 @@ public class User {
                 ResponseSpecs.entityWasCreated())
                 .post(createUserRequest)
                 .extract()
-                .header("Authorization");
+                .header(ResponseSpecs.AUTHORIZATION_HEADER);
     }
 }

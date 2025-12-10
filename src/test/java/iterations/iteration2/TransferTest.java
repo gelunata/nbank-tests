@@ -17,14 +17,10 @@ public class TransferTest extends BaseTest {
     public void userCanTransferMoneyBetweenHisAccountTest(double amount) {
         String userAuthorization = User.create();
 
-        int senderId = Account.create(userAuthorization);
-        int receiverId = Account.create(userAuthorization);
+        long senderId = Account.create(userAuthorization);
+        long receiverId = Account.create(userAuthorization);
 
-        double necessaryBalance = amount;
-        do {
-            Deposit.returnsOK(userAuthorization, senderId, 5000);
-            necessaryBalance -= 5000;
-        } while (necessaryBalance > 0);
+        depositRequiredAmount(userAuthorization, senderId, amount);
 
         double balance1 = Account.getBalance(userAuthorization, senderId);
         double balance2 = Account.getBalance(userAuthorization, receiverId);
@@ -40,14 +36,10 @@ public class TransferTest extends BaseTest {
     public void userCannotTransferMoneyBetweenHisAccountTest(double amount) {
         String userAuthorization = User.create();
 
-        int senderId = Account.create(userAuthorization);
-        int receiverId = Account.create(userAuthorization);
+        long senderId = Account.create(userAuthorization);
+        long receiverId = Account.create(userAuthorization);
 
-        double necessaryBalance = amount;
-        do {
-            Deposit.returnsOK(userAuthorization, senderId, 5000);
-            necessaryBalance -= 5000;
-        } while (necessaryBalance > 0);
+        depositRequiredAmount(userAuthorization, senderId, amount);
 
         double balance1 = Account.getBalance(userAuthorization, senderId);
         double balance2 = Account.getBalance(userAuthorization, receiverId);
@@ -60,12 +52,12 @@ public class TransferTest extends BaseTest {
 
     @Test
     public void userCanTransferMoneyToSomeonesAccountTest() {
-        double amount = 5000;
+        double amount = (double) Math.round(Math.random() * 5000 * 100) / 100;
         String userAuthorization1 = User.create();
         String userAuthorization2 = User.create();
 
-        int senderId = Account.create(userAuthorization1);
-        int receiverId = Account.create(userAuthorization2);
+        long senderId = Account.create(userAuthorization1);
+        long receiverId = Account.create(userAuthorization2);
 
         Deposit.returnsOK(userAuthorization1, senderId, amount);
 
@@ -80,11 +72,11 @@ public class TransferTest extends BaseTest {
 
     @Test
     public void userCannotTransferMoneyFromAccountThatIsLessThanAmountBeingTransferredTest() {
-        double amount = 5000;
+        double amount = (double) Math.round(Math.random() * 5000 * 100) / 100;
         String userAuthorization = User.create();
 
-        int senderId = Account.create(userAuthorization);
-        int receiverId = Account.create(userAuthorization);
+        long senderId = Account.create(userAuthorization);
+        long receiverId = Account.create(userAuthorization);
 
         Deposit.returnsOK(userAuthorization, senderId, amount);
 
@@ -95,5 +87,12 @@ public class TransferTest extends BaseTest {
 
         softly.assertThat(balance1).isEqualTo(Account.getBalance(userAuthorization, senderId));
         softly.assertThat(balance2).isEqualTo(Account.getBalance(userAuthorization, receiverId));
+    }
+
+    private void depositRequiredAmount(String userAuthorization, long senderId, double amount) {
+        do {
+            Deposit.returnsOK(userAuthorization, senderId, 5000);
+            amount -= 5000;
+        } while (amount > 0);
     }
 }

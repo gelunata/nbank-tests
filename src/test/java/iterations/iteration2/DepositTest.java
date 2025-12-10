@@ -17,7 +17,7 @@ public class DepositTest {
     @ParameterizedTest
     public void userCanDepositMoneyIntoHisAccountTest(double amount) {
         String userAuthorization = User.create();
-        int id = Account.create(userAuthorization);
+        long id = Account.create(userAuthorization);
         double balance = Account.getBalance(userAuthorization, id);
         Deposit.returnsOK(userAuthorization, id, amount);
 
@@ -28,7 +28,7 @@ public class DepositTest {
     @ParameterizedTest
     public void userCannotDepositMoneyIntoHisAccountTest(double amount) {
         String userAuthorization = User.create();
-        int id = Account.create(userAuthorization);
+        long id = Account.create(userAuthorization);
         double balance = Account.getBalance(userAuthorization, id);
 
         Deposit.returnsBadRequest(userAuthorization, id, amount);
@@ -41,7 +41,7 @@ public class DepositTest {
         String userAuthorization = User.create();
         Account.create(userAuthorization);
 
-        int maxId = new GetAccountsRequester(
+        long maxId = new GetAccountsRequester(
                 RequestSpecs.authAsUser(userAuthorization),
                 ResponseSpecs.requestReturnsOK())
                 .get(null)

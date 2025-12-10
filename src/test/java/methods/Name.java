@@ -1,6 +1,7 @@
 package methods;
 
 import io.restassured.specification.ResponseSpecification;
+import models.GetUserProfileResponse;
 import models.UpdateNameRequest;
 import requests.GetProfileDetails;
 import requests.UpdateNameRequester;
@@ -33,7 +34,7 @@ public class Name {
                 ResponseSpecs.requestReturnsOK())
                 .get(null)
                 .extract()
-                .jsonPath()
-                .getString("name");
+                .as(GetUserProfileResponse.class)
+                .getName();
     }
 }
