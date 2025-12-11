@@ -15,8 +15,8 @@ public enum Endpoint {
 
     LOGIN(
             "/auth/login",
-            LoginUserRequest.class,
-            LoginUserResponse.class
+            UserLoginRequest.class,
+            UserLoginResponse.class
     ),
 
     ACCOUNTS(

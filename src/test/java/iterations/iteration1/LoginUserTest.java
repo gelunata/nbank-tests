@@ -1,42 +1,28 @@
 package iterations.iteration1;
 
 import models.CreateUserRequest;
-import models.CreateUserResponse;
-import models.LoginUserRequest;
+import models.UserLoginRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import requests.skelethon.Endpoint;
-import requests.skelethon.requesters.CrudRequester;
-import requests.skelethon.requesters.ValidatedCrudRequester;
 import requests.steps.AdminSteps;
-import specs.RequestSpecs;
-import specs.ResponseSpecs;
+import requests.steps.AuthSteps;
 
 public class LoginUserTest {
     @Test
     public void adminCanGenerateAuthTokenTest() {
-        LoginUserRequest userRequest = LoginUserRequest.builder()
-                .username("admin")
-                .password("admin")
-                .build();
+        UserLoginRequest userLoginRequest = AuthSteps.getAuthRequest("admin", "admin");
 
-        new ValidatedCrudRequester<CreateUserResponse>(
-                RequestSpecs.unauthSpec(),
-                Endpoint.LOGIN,
-                ResponseSpecs.requestReturnsOK())
-                .post(userRequest);
+        AuthSteps.getAuth(userLoginRequest)
+                .header("Authorization", Matchers.notNullValue());
     }
 
     @Test
     public void userCanGenerateAuthTokenTest() {
-        CreateUserRequest userRequest = AdminSteps.createUser();
+        CreateUserRequest createUserRequest = AdminSteps.createUserRequest();
+        AdminSteps.createUser(createUserRequest);
+        UserLoginRequest userLoginResponse = new UserLoginRequest(createUserRequest.getUsername(), createUserRequest.getPassword());
 
-        new CrudRequester(
-                RequestSpecs.unauthSpec(),
-                Endpoint.LOGIN,
-                ResponseSpecs.requestReturnsOK())
-                .post(LoginUserRequest.builder()
-                        .username(userRequest.getUsername()).password(userRequest.getPassword()).build())
+        AuthSteps.getAuth(userLoginResponse)
                 .header("Authorization", Matchers.notNullValue());
     }
 }

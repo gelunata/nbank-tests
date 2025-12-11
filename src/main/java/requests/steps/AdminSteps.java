@@ -3,21 +3,22 @@ package requests.steps;
 import generators.RandomData;
 import generators.RandomModelGenerator;
 import models.CreateUserRequest;
+import models.UserRole;
 import requests.skelethon.Endpoint;
 import requests.skelethon.requesters.CrudRequester;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
 public class AdminSteps {
-    private CreateUserRequest createUserRequest() {
+    public static CreateUserRequest createUserRequest() {
         return RandomModelGenerator.generate(CreateUserRequest.class);
     }
 
     private static CreateUserRequest createUserRequest(String username, String password) {
         return CreateUserRequest.builder()
                 .username(username)
-                .password(RandomData.getPassword())
-                .role(password)
+                .password(password)
+                .role(UserRole.USER.toString())
                 .build();
     }
 
@@ -26,10 +27,16 @@ public class AdminSteps {
         return createUser(userRequest);
     }
 
+    public static String createUser(String username) {
+        CreateUserRequest userRequest = createUserRequest(username, RandomData.getPassword());
+        return createUser(userRequest);
+    }
+
     public static String createUser(String username, String password) {
         CreateUserRequest userRequest = createUserRequest(username, password);
         return createUser(userRequest);
     }
+
 
     public static String createUser(CreateUserRequest userRequest) {
         return new CrudRequester(
