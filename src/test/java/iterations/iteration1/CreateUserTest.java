@@ -23,7 +23,7 @@ public class CreateUserTest extends BaseTest {
     @ValueSource(strings = {"abc", "123", "---", "___", "..."})
     public void adminCanCreateUserWithCorrectData(String username) {
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .username(RandomData.getUsername())
+                .username(username)
                 .password(RandomData.getPassword())
                 .role(UserRole.USER.toString())
                 .build();

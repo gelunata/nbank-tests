@@ -5,10 +5,10 @@ import iterations.BaseTest;
 import methods.Account;
 import methods.Deposit;
 import methods.Transfer;
-import methods.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import requests.steps.AdminSteps;
 
 import static org.assertj.core.api.AssertionsForClassTypes.within;
 
@@ -16,7 +16,7 @@ public class TransferTest extends BaseTest {
     @ValueSource(doubles = {0.01, 9999.99, 10000.0})
     @ParameterizedTest
     public void userCanTransferMoneyBetweenHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
         long senderId = Account.create(userAuthorization);
         long receiverId = Account.create(userAuthorization);
@@ -35,7 +35,7 @@ public class TransferTest extends BaseTest {
     @ValueSource(doubles = {-1.0, 0.0, 10000.01})
     @ParameterizedTest
     public void userCannotTransferMoneyBetweenHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
         long senderId = Account.create(userAuthorization);
         long receiverId = Account.create(userAuthorization);
@@ -54,8 +54,8 @@ public class TransferTest extends BaseTest {
     @Test
     public void userCanTransferMoneyToSomeonesAccountTest() {
         double amount = RandomData.getDepositAmount();
-        String userAuthorization1 = User.create();
-        String userAuthorization2 = User.create();
+        String userAuthorization1 = AdminSteps.createUser();
+        String userAuthorization2 = AdminSteps.createUser();
 
         long senderId = Account.create(userAuthorization1);
         long receiverId = Account.create(userAuthorization2);
@@ -74,7 +74,7 @@ public class TransferTest extends BaseTest {
     @Test
     public void userCannotTransferMoneyFromAccountThatIsLessThanAmountBeingTransferredTest() {
         double amount = RandomData.getDepositAmount();
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
         long senderId = Account.create(userAuthorization);
         long receiverId = Account.create(userAuthorization);

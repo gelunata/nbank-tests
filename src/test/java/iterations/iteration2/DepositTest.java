@@ -2,11 +2,11 @@ package iterations.iteration2;
 
 import methods.Account;
 import methods.Deposit;
-import methods.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import requests.GetAccountsRequester;
+import requests.steps.AdminSteps;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
@@ -16,7 +16,7 @@ public class DepositTest {
     @ValueSource(doubles = {0.01, 4999.99, 5000.0})
     @ParameterizedTest
     public void userCanDepositMoneyIntoHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
         long id = Account.create(userAuthorization);
         double balance = Account.getBalance(userAuthorization, id);
         Deposit.returnsOK(userAuthorization, id, amount);
@@ -27,7 +27,7 @@ public class DepositTest {
     @ValueSource(doubles = {-1.0, 0.0, 5000.01})
     @ParameterizedTest
     public void userCannotDepositMoneyIntoHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
         long id = Account.create(userAuthorization);
         double balance = Account.getBalance(userAuthorization, id);
 
@@ -38,7 +38,7 @@ public class DepositTest {
 
     @Test
     public void userCannotDepositMoneyToSomeoneOrToNonexistentAccountTest() {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
         Account.create(userAuthorization);
 
         long maxId = new GetAccountsRequester(
