@@ -6,6 +6,8 @@ import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 
 public class ResponseSpecs {
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private ResponseSpecs() {
     }
 
