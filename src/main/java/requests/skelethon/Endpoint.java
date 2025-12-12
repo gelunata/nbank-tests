@@ -25,6 +25,13 @@ public enum Endpoint {
             CreateAccountResponse.class
     ),
 
+    CUSTOMER_PROFILE(
+            "/customer/profile",
+            BaseModel.class,
+            CreateAccountResponse.class
+
+    ),
+
     CUSTOMER_ACCOUNTS(
             "/customer/accounts",
             BaseModel.class,

@@ -1,9 +1,9 @@
 package iterations.iteration2;
 
-import methods.Name;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import requests.steps.AdminSteps;
+import requests.steps.CustomerSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,9 +12,9 @@ public class UpdateNameTest {
     @ParameterizedTest
     public void userCanUpdateNameTest(String newName) {
         String userAuthorization = AdminSteps.createUser();
-        Name.updateRequestReturnOK(userAuthorization, newName);
-        assertEquals(newName, Name.get(userAuthorization));
+        CustomerSteps.updateName(userAuthorization, newName);
 
+        assertEquals(newName, CustomerSteps.getName(userAuthorization));
     }
 
     @ValueSource(strings = {"", "John", "Maria Anna Soul", // если не два слова
@@ -23,8 +23,9 @@ public class UpdateNameTest {
     @ParameterizedTest
     public void userCannotUpdateNameTest(String newName) {
         String userAuthorization = AdminSteps.createUser();
-        String name = Name.get(userAuthorization);
-        Name.updateRequestReturnBadRequest(userAuthorization, newName);
-        assertEquals(name, Name.get(userAuthorization));
+        String name = CustomerSteps.getName(userAuthorization);
+        CustomerSteps.updateName(userAuthorization, newName);
+
+        assertEquals(name, CustomerSteps.getName(userAuthorization));
     }
 }
