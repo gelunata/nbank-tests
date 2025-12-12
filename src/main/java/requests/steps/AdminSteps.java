@@ -28,6 +28,11 @@ public class AdminSteps {
                 .build();
     }
 
+    public static String createUser() {
+        CreateUserRequest userRequest = createUserRequest();
+        return createUser(userRequest.getUsername(), userRequest.getPassword());
+    }
+
     public static String createUser(String username, String password) {
         CreateUserRequest userRequest = createUserRequest(username, password);
         return new CrudRequester(
