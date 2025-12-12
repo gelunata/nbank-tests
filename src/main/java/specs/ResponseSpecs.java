@@ -3,7 +3,8 @@ package specs;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.ResponseSpecification;
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 public class ResponseSpecs {
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -33,10 +34,10 @@ public class ResponseSpecs {
                 .build();
     }
 
-    public static ResponseSpecification requestReturnsBadRequest(String errorKey, String errorValue) {
+    public static ResponseSpecification requestReturnsBadRequest(String errorKey, String[] errorValue) {
         return defaultRequestBuilder()
                 .expectStatusCode(HttpStatus.SC_BAD_REQUEST)
-                .expectBody(errorKey, Matchers.equalTo(errorValue))
+                .expectBody(errorKey, containsInAnyOrder(errorValue))
                 .build();
     }
 

@@ -30,17 +30,17 @@ public class CreateUserTest extends BaseTest {
         return Stream.of(
                 // username field validation
                 Arguments.of("  ", "Password1!", "username",
-                        "Username cannot be blank"),
+                        new String[]{"Username cannot be blank", "Username must be between 3 and 15 characters", "Username must contain only letters, digits, dashes, underscores, and dots"}),
                 Arguments.of("ab", "Password1!", "username",
-                        "Username must be between 3 and 15 characters"),
+                        new String[]{"Username must be between 3 and 15 characters"}),
                 Arguments.of("ab%", "Password1!", "username",
-                        "Username must contain only letters, digits, dashes, underscores, and dots")
+                        new String[]{"Username must contain only letters, digits, dashes, underscores, and dots"})
         );
     }
 
     @MethodSource("userInvalidData")
     @ParameterizedTest
-    public void adminCanNotCreateUserWithInvalidData(String username, String password, String errorKey, String errorValue) {
+    public void adminCanNotCreateUserWithInvalidData(String username, String password, String errorKey, String[] errorValue) {
         CreateUserRequest createUserRequest = AdminSteps.createUserRequest(username, password);
 
         new CrudRequester(RequestSpecs.adminSpec(),
