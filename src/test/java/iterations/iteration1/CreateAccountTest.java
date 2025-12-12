@@ -1,12 +1,11 @@
 package iterations.iteration1;
 
-import models.CreateAccountResponse;
 import org.junit.jupiter.api.Test;
 import requests.steps.AccountsSteps;
 import requests.steps.AdminSteps;
 import requests.steps.CustomerSteps;
 
-import static org.hamcrest.Matchers.hasItem;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateAccountTest {
 
@@ -15,11 +14,8 @@ public class CreateAccountTest {
         String userAuthorization = AdminSteps.createUser();
 
         long id = AccountsSteps.createAccount(userAuthorization)
-                .extract()
-                .as(CreateAccountResponse.class)
                 .getId();
 
-        CustomerSteps.getAccounts(userAuthorization)
-                .body("id", hasItem((int) id));
+        assertTrue(CustomerSteps.hasAccount(userAuthorization, id));
     }
 }

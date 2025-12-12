@@ -24,7 +24,7 @@ public class UpdateNameTest {
     public void userCannotUpdateNameTest(String newName) {
         String userAuthorization = AdminSteps.createUser();
         String name = CustomerSteps.getName(userAuthorization);
-        CustomerSteps.updateName(userAuthorization, newName);
+        CustomerSteps.updateNameFailed(userAuthorization, newName);
 
         assertEquals(name, CustomerSteps.getName(userAuthorization));
     }

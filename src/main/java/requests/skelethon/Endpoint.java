@@ -22,20 +22,26 @@ public enum Endpoint {
     ACCOUNTS(
             "/accounts",
             BaseModel.class,
-            CreateAccountResponse.class
+            AccountResponse.class
+    ),
+
+    ACCOUNTS_DEPOSIT(
+            "/accounts/deposit",
+            DepositRequest.class,
+            DepositResponse.class
     ),
 
     CUSTOMER_PROFILE(
             "/customer/profile",
             BaseModel.class,
-            CreateAccountResponse.class
+            GetUserProfileResponse.class
 
     ),
 
     CUSTOMER_ACCOUNTS(
             "/customer/accounts",
             BaseModel.class,
-            CreateAccountResponse.class
+            AccountResponse.class
 
     );
 
