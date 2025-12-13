@@ -5,7 +5,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import models.LoginUserRequest;
+import models.UserLoginRequest;
 import requests.skelethon.Endpoint;
 import config.Config;
 import requests.skelethon.requesters.CrudRequester;
@@ -54,7 +54,7 @@ public class RequestSpecs {
                     RequestSpecs.unauthSpec(),
                     Endpoint.LOGIN,
                     ResponseSpecs.requestReturnsOK())
-                    .post(LoginUserRequest.builder().username(username).password(password).build())
+                    .post(UserLoginRequest.builder().username(username).password(password).build())
                     .extract()
                     .header("Authorization");
 

@@ -2,13 +2,12 @@ package iterations.iteration2;
 
 import generators.RandomData;
 import iterations.BaseTest;
-import methods.Account;
-import methods.Deposit;
-import methods.Transfer;
-import methods.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import requests.steps.AccountsSteps;
+import requests.steps.AdminSteps;
+import requests.steps.CustomerSteps;
 
 import static org.assertj.core.api.AssertionsForClassTypes.within;
 
@@ -16,83 +15,83 @@ public class TransferTest extends BaseTest {
     @ValueSource(doubles = {0.01, 9999.99, 10000.0})
     @ParameterizedTest
     public void userCanTransferMoneyBetweenHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
-        long senderId = Account.create(userAuthorization);
-        long receiverId = Account.create(userAuthorization);
+        long senderId = AccountsSteps.createAccount(userAuthorization).getId();
+        long receiverId = AccountsSteps.createAccount(userAuthorization).getId();
 
         depositRequiredAmount(userAuthorization, senderId, amount);
 
-        double balance1 = Account.getBalance(userAuthorization, senderId);
-        double balance2 = Account.getBalance(userAuthorization, receiverId);
+        double balance1 = CustomerSteps.getBalance(userAuthorization, senderId);
+        double balance2 = CustomerSteps.getBalance(userAuthorization, receiverId);
 
-        Transfer.returnOK(userAuthorization, senderId, receiverId, amount);
+        AccountsSteps.transferMoney(userAuthorization, senderId, receiverId, amount);
 
-        softly.assertThat(balance1 - amount).isCloseTo(Account.getBalance(userAuthorization, senderId), within(1e-9));
-        softly.assertThat(balance2 + amount).isCloseTo(Account.getBalance(userAuthorization, receiverId), within(1e-9));
+        softly.assertThat(balance1 - amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, senderId), within(1e-9));
+        softly.assertThat(balance2 + amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, receiverId), within(1e-9));
     }
 
     @ValueSource(doubles = {-1.0, 0.0, 10000.01})
     @ParameterizedTest
     public void userCannotTransferMoneyBetweenHisAccountTest(double amount) {
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
-        long senderId = Account.create(userAuthorization);
-        long receiverId = Account.create(userAuthorization);
+        long senderId = AccountsSteps.createAccount(userAuthorization).getId();
+        long receiverId = AccountsSteps.createAccount(userAuthorization).getId();
 
         depositRequiredAmount(userAuthorization, senderId, amount);
 
-        double balance1 = Account.getBalance(userAuthorization, senderId);
-        double balance2 = Account.getBalance(userAuthorization, receiverId);
+        double balance1 = CustomerSteps.getBalance(userAuthorization, senderId);
+        double balance2 = CustomerSteps.getBalance(userAuthorization, receiverId);
 
-        Transfer.returnBadRequest(userAuthorization, senderId, receiverId, amount);
+        AccountsSteps.transferMoneyFailed(userAuthorization, senderId, receiverId, amount);
 
-        softly.assertThat(balance1).isEqualTo(Account.getBalance(userAuthorization, senderId));
-        softly.assertThat(balance2).isEqualTo(Account.getBalance(userAuthorization, receiverId));
+        softly.assertThat(balance1).isEqualTo(CustomerSteps.getBalance(userAuthorization, senderId));
+        softly.assertThat(balance2).isEqualTo(CustomerSteps.getBalance(userAuthorization, receiverId));
     }
 
     @Test
     public void userCanTransferMoneyToSomeonesAccountTest() {
         double amount = RandomData.getDepositAmount();
-        String userAuthorization1 = User.create();
-        String userAuthorization2 = User.create();
+        String userAuthorization1 = AdminSteps.createUser();
+        String userAuthorization2 = AdminSteps.createUser();
 
-        long senderId = Account.create(userAuthorization1);
-        long receiverId = Account.create(userAuthorization2);
+        long senderId = AccountsSteps.createAccount(userAuthorization1).getId();
+        long receiverId = AccountsSteps.createAccount(userAuthorization2).getId();
 
-        Deposit.returnsOK(userAuthorization1, senderId, amount);
+        depositRequiredAmount(userAuthorization1, senderId, amount);
 
-        double balance1 = Account.getBalance(userAuthorization1, senderId);
-        double balance2 = Account.getBalance(userAuthorization2, receiverId);
+        double balance1 = CustomerSteps.getBalance(userAuthorization1, senderId);
+        double balance2 = CustomerSteps.getBalance(userAuthorization2, receiverId);
 
-        Transfer.returnOK(userAuthorization1, senderId, receiverId, amount);
+        AccountsSteps.transferMoney(userAuthorization1, senderId, receiverId, amount);
 
-        softly.assertThat(balance1 - amount).isEqualTo(Account.getBalance(userAuthorization1, senderId));
-        softly.assertThat(balance2 + amount).isEqualTo(Account.getBalance(userAuthorization2, receiverId));
+        softly.assertThat(balance1 - amount).isEqualTo(CustomerSteps.getBalance(userAuthorization1, senderId));
+        softly.assertThat(balance2 + amount).isEqualTo(CustomerSteps.getBalance(userAuthorization2, receiverId));
     }
 
     @Test
     public void userCannotTransferMoneyFromAccountThatIsLessThanAmountBeingTransferredTest() {
         double amount = RandomData.getDepositAmount();
-        String userAuthorization = User.create();
+        String userAuthorization = AdminSteps.createUser();
 
-        long senderId = Account.create(userAuthorization);
-        long receiverId = Account.create(userAuthorization);
+        long senderId = AccountsSteps.createAccount(userAuthorization).getId();
+        long receiverId = AccountsSteps.createAccount(userAuthorization).getId();
 
-        Deposit.returnsOK(userAuthorization, senderId, amount);
+        AccountsSteps.depositMoney(userAuthorization, senderId, amount);
 
-        double balance1 = Account.getBalance(userAuthorization, senderId);
-        double balance2 = Account.getBalance(userAuthorization, receiverId);
+        double balance1 = CustomerSteps.getBalance(userAuthorization, senderId);
+        double balance2 = CustomerSteps.getBalance(userAuthorization, receiverId);
 
-        Transfer.returnBadRequest(userAuthorization, senderId, receiverId, amount + 0.01);
+        AccountsSteps.transferMoneyFailed(userAuthorization, senderId, receiverId, amount + 0.01);
 
-        softly.assertThat(balance1).isEqualTo(Account.getBalance(userAuthorization, senderId));
-        softly.assertThat(balance2).isEqualTo(Account.getBalance(userAuthorization, receiverId));
+        softly.assertThat(balance1).isEqualTo(CustomerSteps.getBalance(userAuthorization, senderId));
+        softly.assertThat(balance2).isEqualTo(CustomerSteps.getBalance(userAuthorization, receiverId));
     }
 
-    private void depositRequiredAmount(String userAuthorization, long senderId, double amount) {
+    private void depositRequiredAmount(String userAuthorization, long id, double amount) {
         do {
-            Deposit.returnsOK(userAuthorization, senderId, 5000);
+            AccountsSteps.depositMoney(userAuthorization, id, 5000);
             amount -= 5000;
         } while (amount > 0);
     }

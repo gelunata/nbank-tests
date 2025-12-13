@@ -1,18 +1,16 @@
 package iterations.iteration1;
 
-import generators.RandomData;
-import models.comparision.ModelAssertions;
 import iterations.BaseTest;
 import models.CreateUserRequest;
 import models.CreateUserResponse;
-import models.UserRole;
+import models.comparision.ModelAssertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import requests.skelethon.Endpoint;
 import requests.skelethon.requesters.CrudRequester;
-import requests.skelethon.requesters.ValidatedCrudRequester;
+import requests.steps.AdminSteps;
 import specs.RequestSpecs;
 import specs.ResponseSpecs;
 
@@ -22,18 +20,8 @@ public class CreateUserTest extends BaseTest {
     @ParameterizedTest
     @ValueSource(strings = {"abc", "123", "---", "___", "..."})
     public void adminCanCreateUserWithCorrectData(String username) {
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .username(RandomData.getUsername())
-                .password(RandomData.getPassword())
-                .role(UserRole.USER.toString())
-                .build();
-
-        CreateUserResponse createUserResponse =
-                new ValidatedCrudRequester<CreateUserResponse>(
-                        RequestSpecs.adminSpec(),
-                        Endpoint.ADMIN_USER,
-                        ResponseSpecs.entityWasCreated())
-                        .post(createUserRequest);
+        CreateUserRequest createUserRequest = AdminSteps.createUserRequest(username);
+        CreateUserResponse createUserResponse = AdminSteps.createUser(createUserRequest);
 
         ModelAssertions.assertThatModels(createUserRequest, createUserResponse).match();
     }
@@ -41,23 +29,19 @@ public class CreateUserTest extends BaseTest {
     public static Stream<Arguments> userInvalidData() {
         return Stream.of(
                 // username field validation
-                Arguments.of("  ", "Password1!", "USER", "username",
-                        "Username cannot be blank"),
-                Arguments.of("ab", "Password1!", "USER", "username",
-                        "Username must be between 3 and 15 characters"),
-                Arguments.of("ab%", "Password1!", "USER", "username",
-                        "Username must contain only letters, digits, dashes, underscores, and dots")
+                Arguments.of("  ", "Password1!", "username",
+                        new String[]{"Username cannot be blank", "Username must be between 3 and 15 characters", "Username must contain only letters, digits, dashes, underscores, and dots"}),
+                Arguments.of("ab", "Password1!", "username",
+                        new String[]{"Username must be between 3 and 15 characters"}),
+                Arguments.of("ab%", "Password1!", "username",
+                        new String[]{"Username must contain only letters, digits, dashes, underscores, and dots"})
         );
     }
 
     @MethodSource("userInvalidData")
     @ParameterizedTest
-    public void adminCanNotCreateUserWithInvalidData(String username, String password, String role, String errorKey, String errorValue) {
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .username(username)
-                .password(password)
-                .role(role)
-                .build();
+    public void adminCanNotCreateUserWithInvalidData(String username, String password, String errorKey, String[] errorValue) {
+        CreateUserRequest createUserRequest = AdminSteps.createUserRequest(username, password);
 
         new CrudRequester(RequestSpecs.adminSpec(),
                 Endpoint.ADMIN_USER,

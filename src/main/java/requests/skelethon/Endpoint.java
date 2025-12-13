@@ -15,20 +15,39 @@ public enum Endpoint {
 
     LOGIN(
             "/auth/login",
-            LoginUserRequest.class,
-            LoginUserResponse.class
+            UserLoginRequest.class,
+            UserLoginResponse.class
     ),
 
     ACCOUNTS(
             "/accounts",
             BaseModel.class,
-            CreateAccountResponse.class
+            AccountResponse.class
+    ),
+
+    ACCOUNTS_TRANSFER(
+            "/accounts/transfer",
+            BaseModel.class,
+            AccountResponse.class
+    ),
+
+    ACCOUNTS_DEPOSIT(
+            "/accounts/deposit",
+            DepositRequest.class,
+            DepositResponse.class
+    ),
+
+    CUSTOMER_PROFILE(
+            "/customer/profile",
+            BaseModel.class,
+            GetUserProfileResponse.class
+
     ),
 
     CUSTOMER_ACCOUNTS(
             "/customer/accounts",
             BaseModel.class,
-            CreateAccountResponse.class
+            AccountResponse.class
 
     );
 
