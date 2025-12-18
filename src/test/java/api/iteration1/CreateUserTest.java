@@ -1,6 +1,6 @@
-package iterations.iteration1;
+package api.iteration1;
 
-import iterations.BaseTest;
+import api.BaseTest;
 import models.CreateUserRequest;
 import models.CreateUserResponse;
 import models.comparision.ModelAssertions;
