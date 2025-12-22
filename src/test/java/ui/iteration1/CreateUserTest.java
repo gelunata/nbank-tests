@@ -1,4 +1,4 @@
-package ui;
+package ui.iteration1;
 
 import com.codeborne.selenide.*;
 import models.CreateUserRequest;

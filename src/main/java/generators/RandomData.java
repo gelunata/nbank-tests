@@ -16,7 +16,15 @@ public class RandomData {
                 RandomStringUtils.randomNumeric(3) + "%$#";
     }
 
-    public static double getDepositAmount(){
+    public static String getName() {
+        return RandomStringUtils.randomAlphabetic(5) + " " + RandomStringUtils.randomAlphabetic(5);
+    }
+
+    public static double getDepositAmount() {
         return (double) Math.round(Math.random() * 5000 * 100) / 100;
+    }
+
+    public static double getIncorrectDepositAmount() {
+        return (double) Math.round((Math.random() * 4999.99 + 5000.01) * 100.0) / 100.0;
     }
 }
