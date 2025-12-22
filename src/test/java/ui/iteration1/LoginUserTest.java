@@ -1,4 +1,4 @@
-package ui;
+package ui.iteration1;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
