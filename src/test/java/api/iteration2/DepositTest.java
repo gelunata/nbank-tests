@@ -1,12 +1,12 @@
 package api.iteration2;
 
-import models.AccountResponse;
+import api.models.AccountResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import requests.steps.AccountsSteps;
-import requests.steps.AdminSteps;
-import requests.steps.CustomerSteps;
+import api.requests.steps.AccountsSteps;
+import api.requests.steps.AdminSteps;
+import api.requests.steps.CustomerSteps;
 
 import java.util.Arrays;
 
