@@ -1,39 +1,18 @@
 package ui.iteration1;
 
-import com.codeborne.selenide.*;
-import models.CreateUserRequest;
-import models.CreateUserResponse;
-import models.comparision.ModelAssertions;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.BeforeAll;
+import api.models.CreateUserRequest;
+import api.models.CreateUserResponse;
+import api.models.comparision.ModelAssertions;
+import api.requests.steps.AdminSteps;
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Alert;
-import requests.steps.AdminSteps;
-import specs.RequestSpecs;
+import ui.BaseUiTest;
+import ui.pages.AdminPanel;
+import ui.pages.BankAlert;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.switchTo;
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreateUserTest {
-    @BeforeAll
-    public static void Selenoid() {
-        Configuration.remote = "http://localhost:4444/wd/hub";
-        Configuration.baseUrl = "http://192.168.1.53:3000";
-        Configuration.browser = "chrome";
-        Configuration.browserSize = "1920x1080";
-
-        Configuration.browserCapabilities.setCapability(
-                "selenoid:options",
-                Map.of("enableVNC", true, "enableLog", true)
-        );
-    }
-
+public class CreateUserTest extends BaseUiTest {
     @Test
     public void adminCanCreateUserTest() {
         CreateUserRequest admin = CreateUserRequest.builder()
@@ -41,36 +20,16 @@ public class CreateUserTest {
                 .password("admin")
                 .build();
 
-        Selenide.open("/login");
-
-        $(Selectors.byAttribute("placeholder", "Username")).sendKeys(admin.getUsername());
-        $(Selectors.byAttribute("placeholder", "Password")).sendKeys(admin.getPassword());
-        $("button").click();
-
-        $(Selectors.byText("Admin Panel")).shouldBe(Condition.visible);
+        authAsUser(admin);
 
         CreateUserRequest newUser = AdminSteps.createUserRequest();
+        new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
+                .checkAlertMessageAndAccept(BankAlert.USER_CREATED_SUCCESSFULLY.getMessage())
+                .getAllUsers()
+                .findBy(Condition.exactText(newUser.getUsername() + "\nUSER"))
+                .shouldBe(Condition.visible);
 
-        $(Selectors.byAttribute("placeholder", "Username")).sendKeys(newUser.getUsername());
-        $(Selectors.byAttribute("placeholder", "Password")).sendKeys(newUser.getPassword());
-        $(Selectors.byText("Add User")).click();
-
-        Alert alert = switchTo().alert();
-        assertEquals("✅ User created successfully!", alert.getText());
-        alert.accept();
-
-        ElementsCollection allUsersFromDashboard = $(Selectors.byText("All Users")).parent().findAll("li");
-        allUsersFromDashboard.findBy(Condition.exactText(newUser.getUsername() + "\nUSER")).shouldBe(Condition.visible);
-
-        CreateUserResponse[] users = given()
-                .spec(RequestSpecs.adminSpec())
-                .get("http://localhost:4111/api/v1/admin/users")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .extract().as(CreateUserResponse[].class);
-
-        CreateUserResponse createdUser = Arrays.stream(users)
+        CreateUserResponse createdUser = AdminSteps.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))
                 .findFirst()
                 .get();
@@ -85,36 +44,16 @@ public class CreateUserTest {
                 .password("admin")
                 .build();
 
-        Selenide.open("/login");
-
-        $(Selectors.byAttribute("placeholder", "Username")).sendKeys(admin.getUsername());
-        $(Selectors.byAttribute("placeholder", "Password")).sendKeys(admin.getPassword());
-        $("button").click();
-
-        $(Selectors.byText("Admin Panel")).shouldBe(Condition.visible);
+        authAsUser(admin);
 
         CreateUserRequest newUser = AdminSteps.createUserRequest("a");
 
-        $(Selectors.byAttribute("placeholder", "Username")).sendKeys(newUser.getUsername());
-        $(Selectors.byAttribute("placeholder", "Password")).sendKeys(newUser.getPassword());
-        $(Selectors.byText("Add User")).click();
+        new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
+                .checkAlertMessageAndAccept(BankAlert.USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS.getMessage())
+                .getAllUsers()
+                .findBy(Condition.exactText(newUser.getUsername() + "\nUSER")).shouldNotBe(Condition.exist);
 
-        Alert alert = switchTo().alert();
-        assertThat(alert.getText().contains("Username must be between 3 and 16 characters"));
-        alert.accept();
-
-        ElementsCollection allUsersFromDashboard = $(Selectors.byText("All Users")).parent().findAll("li");
-        allUsersFromDashboard.findBy(Condition.exactText(newUser.getUsername() + "\nUSER")).shouldNotBe(Condition.exist);
-
-        CreateUserResponse[] users = given()
-                .spec(RequestSpecs.adminSpec())
-                .get("http://localhost:4111/api/v1/admin/users")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .extract().as(CreateUserResponse[].class);
-
-        long usersWithSameUsernameAsNewUser = Arrays.stream(users)
+        long usersWithSameUsernameAsNewUser = AdminSteps.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))
                 .count();
 

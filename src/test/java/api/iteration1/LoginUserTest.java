@@ -1,11 +1,11 @@
 package api.iteration1;
 
-import models.CreateUserRequest;
-import models.UserLoginRequest;
+import api.models.CreateUserRequest;
+import api.models.UserLoginRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import requests.steps.AdminSteps;
-import requests.steps.AuthSteps;
+import api.requests.steps.AdminSteps;
+import api.requests.steps.AuthSteps;
 
 public class LoginUserTest {
     @Test

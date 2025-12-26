@@ -1,13 +1,13 @@
 package api.iteration2;
 
-import generators.RandomData;
+import api.generators.RandomData;
 import api.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import requests.steps.AccountsSteps;
-import requests.steps.AdminSteps;
-import requests.steps.CustomerSteps;
+import api.requests.steps.AccountsSteps;
+import api.requests.steps.AdminSteps;
+import api.requests.steps.CustomerSteps;
 
 import static org.assertj.core.api.AssertionsForClassTypes.within;
 

@@ -2,8 +2,8 @@ package api.iteration2;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import requests.steps.AdminSteps;
-import requests.steps.CustomerSteps;
+import api.requests.steps.AdminSteps;
+import api.requests.steps.CustomerSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

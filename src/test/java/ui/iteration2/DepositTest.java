@@ -3,13 +3,13 @@ package ui.iteration2;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
-import generators.RandomData;
-import models.AccountResponse;
+import api.generators.RandomData;
+import api.models.AccountResponse;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
-import requests.steps.AccountsSteps;
-import requests.steps.AdminSteps;
-import requests.steps.CustomerSteps;
+import api.requests.steps.AccountsSteps;
+import api.requests.steps.AdminSteps;
+import api.requests.steps.CustomerSteps;
 import ui.BaseTest;
 
 import static com.codeborne.selenide.Selenide.*;
