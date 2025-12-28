@@ -1,6 +1,5 @@
 package ui.pages;
 
-import api.requests.steps.AdminSteps;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;

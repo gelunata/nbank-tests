@@ -1,44 +1,32 @@
 package ui.iteration2;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.Selenide;
 import api.generators.RandomData;
 import api.models.CreateUserRequest;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Alert;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
-import ui.SoftAssertionsTest;
+import org.junit.jupiter.api.Test;
+import ui.BaseUiTest;
+import ui.pages.BankAlert;
+import ui.pages.EditProfilePage;
+import ui.pages.UserDashboard;
 
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
-
-public class UpdateNameTest extends SoftAssertionsTest {
+public class UpdateNameTest extends BaseUiTest {
     @Test
     public void userCanUpdateNameTest() {
         String newName = RandomData.getName();
         CreateUserRequest userRequest = AdminSteps.createUserRequest();
         String userAuthHeader = AdminSteps.createUser(userRequest.getUsername(), userRequest.getPassword());
 
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-        Selenide.open("/dashboard");
+        authAsUser(userAuthHeader);
 
-        $("div.profile-header").click();
+        String name = new UserDashboard().open()
+                .editProfile()
+                .getPage(EditProfilePage.class)
+                .newName(newName)
+                .checkAlertMessageAndAccept(BankAlert.NAME_UPDATE_SUCCESSFULLY.getMessage())
+                .getName().getText();
 
-        $(Selectors.byAttribute("placeholder", "Enter new name"))
-                .shouldBe(Condition.visible)
-                .setValue(newName);
-
-        $(Selectors.byText("\uD83D\uDCBE Save Changes")).click();
-
-        Alert alert = switchTo().alert();
-        softly.assertThat(alert.getText()).contains("✅ Name updated successfully!");
-        alert.accept();
-
-        $(byText("✏\uFE0F Edit Profile")).shouldBe(Condition.visible);
-        softly.assertThat($("span.user-name").getText()).contains(newName);
+        softly.assertThat(name).contains(newName);
         // !!! БАГ !!! Не изменяется, пока не обновишь страницу!!!
 
         softly.assertThat(CustomerSteps.getName(userAuthHeader)).isEqualTo(newName);
@@ -51,26 +39,13 @@ public class UpdateNameTest extends SoftAssertionsTest {
         CreateUserRequest userRequest = AdminSteps.createUserRequest();
         String userAuthHeader = AdminSteps.createUser(userRequest.getUsername(), userRequest.getPassword());
 
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-        Selenide.open("/dashboard");
+        authAsUser(userAuthHeader);
+        String actualName = new EditProfilePage().open()
+                .newName(newName)
+                .checkAlertMessageAndAccept(BankAlert.NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY.getMessage())
+                .getName().getText();
 
-        $("div.profile-header").click();
-
-        $(Selectors.byAttribute("placeholder", "Enter new name"))
-                .shouldBe(Condition.visible)
-                .setValue(newName)
-                .shouldBe(Condition.visible)
-                .setValue(newName);
-
-        $(Selectors.byText("\uD83D\uDCBE Save Changes")).click();
-
-        Alert alert = switchTo().alert();
-        softly.assertThat(alert.getText()).contains("Name must contain two words with letters only");
-        alert.accept();
-
-        $(byText("✏\uFE0F Edit Profile")).shouldBe(Condition.visible);
-        softly.assertThat($("span.user-name").getText()).contains(name);
+        softly.assertThat(actualName).contains(name);
 
         softly.assertThat(CustomerSteps.getName(userAuthHeader)).isNull();
     }

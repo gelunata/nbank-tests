@@ -1,5 +1,6 @@
 package ui;
 
+import api.BaseTest;
 import api.config.Config;
 import api.models.CreateUserRequest;
 import api.specs.RequestSpecs;
@@ -25,10 +26,13 @@ public class BaseUiTest extends BaseTest {
         );
     }
 
-    public void authAsUser(String username, String password) {
+    public void authAsUser(String userAuthHeader) {
         Selenide.open("/");
-        String userAuthHeader = RequestSpecs.getUserAuthHeader(username, password);
         executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
+    }
+
+    public void authAsUser(String username, String password) {
+        authAsUser(RequestSpecs.getUserAuthHeader(username, password));
     }
 
     public void authAsUser(CreateUserRequest createUserRequest) {
