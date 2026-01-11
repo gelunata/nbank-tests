@@ -2,16 +2,18 @@ package ui;
 
 import api.BaseTest;
 import api.config.Config;
-import api.models.CreateUserRequest;
-import api.specs.RequestSpecs;
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
+import common.extensions.AdminSessionExtension;
+import common.extensions.BrowserMatchExtension;
+import common.extensions.UserSessionExtension;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Map;
 
-import static com.codeborne.selenide.Selenide.executeJavaScript;
-
+@ExtendWith(AdminSessionExtension.class)
+@ExtendWith(UserSessionExtension.class)
+@ExtendWith(BrowserMatchExtension.class)
 public class BaseUiTest extends BaseTest {
     @BeforeAll
     public static void Selenoid() {
@@ -24,18 +26,5 @@ public class BaseUiTest extends BaseTest {
                 "selenoid:options",
                 Map.of("enableVNC", true, "enableLog", true)
         );
-    }
-
-    public void authAsUser(String userAuthHeader) {
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-    }
-
-    public void authAsUser(String username, String password) {
-        authAsUser(RequestSpecs.getUserAuthHeader(username, password));
-    }
-
-    public void authAsUser(CreateUserRequest createUserRequest) {
-        authAsUser(createUserRequest.getUsername(), createUserRequest.getPassword());
     }
 }
