@@ -1,22 +1,19 @@
 package ui.iteration2;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.Selenide;
 import api.generators.RandomData;
 import api.models.AccountResponse;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Alert;
 import api.requests.steps.AccountsSteps;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
-import ui.BaseTest;
+import org.junit.jupiter.api.Test;
+import ui.BaseUiTest;
+import ui.pages.BankAlert;
+import ui.pages.DepositPage;
+import ui.pages.UserDashboard;
 
-import static com.codeborne.selenide.Selenide.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DepositTest extends BaseTest {
+public class DepositTest extends BaseUiTest {
     @Test
     public void userCanDepositMoneyIntoHisAccountTest() {
         double amount = RandomData.getDepositAmount();
@@ -24,24 +21,16 @@ public class DepositTest extends BaseTest {
         String userAuthHeader = AdminSteps.createUser();
         AccountResponse account = AccountsSteps.createAccount(userAuthHeader);
 
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-        Selenide.open("/dashboard");
+        authAsUser(userAuthHeader);
 
-        $(Selectors.byText("\uD83D\uDCB0 Deposit Money")).click();
+        new UserDashboard().open()
+                .depositMoney()
+                .getPage(DepositPage.class)
+                .deposit(account.getAccountNumber(), amount)
+                .checkAlertMessageAndAccept(
+                        BankAlert.SUCCESSFULLY_DEPOSITED_TO_ACCOUNT.format(amount, account.getAccountNumber()));
 
-        $(".form-control.account-selector").selectOption(1);
-        $(".form-control.deposit-input").sendKeys(String.valueOf(amount));
-        $(Selectors.byText("\uD83D\uDCB5 Deposit")).click();
-
-        Alert alert = switchTo().alert();
-        assertThat(alert.getText())
-                .contains(String.format("✅ Successfully deposited $%s to account %s!", amount, account.getAccountNumber()));
-        alert.accept();
-
-        $(Selectors.byText("User Dashboard")).shouldBe(Condition.visible);
-
-        assertEquals(amount, CustomerSteps.getBalance(userAuthHeader, account.getId()));
+        assertThat(CustomerSteps.getBalance(userAuthHeader, account.getId())).isEqualTo(amount);
     }
 
     @Test
@@ -49,25 +38,15 @@ public class DepositTest extends BaseTest {
         double amount = RandomData.getIncorrectDepositAmount();
 
         String userAuthHeader = AdminSteps.createUser();
-        long id = AccountsSteps.createAccount(userAuthHeader).getId();
+        AccountResponse account = AccountsSteps.createAccount(userAuthHeader);
 
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-        Selenide.open("/dashboard");
+        authAsUser(userAuthHeader);
 
-        $(Selectors.byText("\uD83D\uDCB0 Deposit Money")).click();
+        new DepositPage().open()
+                .deposit(account.getAccountNumber(), amount)
+                .checkAlertMessageAndAccept(BankAlert.PLEASE_DEPOSIT_LESS_OR_EQUAL_TO_5000.getMessage());
 
-        $(".form-control.account-selector").selectOption(1);
-        $(".form-control.deposit-input").sendKeys(String.valueOf(amount));
-        $(Selectors.byText("\uD83D\uDCB5 Deposit")).click();
-
-        Alert alert = switchTo().alert();
-        assertThat(alert.getText()).contains("❌ Please deposit less or equal to 5000$.");
-        alert.accept();
-
-        $(Selectors.byText("\uD83D\uDCB0 Deposit Money")).shouldBe(Condition.visible);
-
-        assertEquals(0, CustomerSteps.getBalance(userAuthHeader, id));
+        assertThat(CustomerSteps.getBalance(userAuthHeader, account.getId())).isZero();
     }
 
     @Test
@@ -77,19 +56,10 @@ public class DepositTest extends BaseTest {
         String userAuthHeader = AdminSteps.createUser();
         AccountsSteps.createAccount(userAuthHeader);
 
-        Selenide.open("/");
-        executeJavaScript("localStorage.setItem('authToken', arguments[0]);", userAuthHeader);
-        Selenide.open("/dashboard");
+        authAsUser(userAuthHeader);
 
-        $(Selectors.byText("\uD83D\uDCB0 Deposit Money")).click();
-
-        $(".form-control.deposit-input").sendKeys(String.valueOf(amount));
-        $(Selectors.byText("\uD83D\uDCB5 Deposit")).click();
-
-        Alert alert = switchTo().alert();
-        assertThat(alert.getText()).contains("❌ Please select an account.");
-        alert.accept();
-
-        $(Selectors.byText("\uD83D\uDCB0 Deposit Money")).shouldBe(Condition.visible);
+        new DepositPage().open()
+                .deposit(amount)
+                .checkAlertMessageAndAccept(BankAlert.PLEASE_SELECT_AN_ACCOUNT.getMessage());
     }
 }
