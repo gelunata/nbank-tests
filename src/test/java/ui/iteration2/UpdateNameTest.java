@@ -1,9 +1,10 @@
 package ui.iteration2;
 
 import api.generators.RandomData;
-import api.models.CreateUserRequest;
-import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
+import api.specs.RequestSpecs;
+import common.annotations.UserSession;
+import common.storage.SessionStorage;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
 import ui.pages.BankAlert;
@@ -12,12 +13,9 @@ import ui.pages.UserDashboard;
 
 public class UpdateNameTest extends BaseUiTest {
     @Test
+    @UserSession
     public void userCanUpdateNameTest() {
         String newName = RandomData.getName();
-        CreateUserRequest userRequest = AdminSteps.createUserRequest();
-        String userAuthHeader = AdminSteps.createUser(userRequest.getUsername(), userRequest.getPassword());
-
-        authAsUser(userAuthHeader);
 
         String name = new UserDashboard().open()
                 .editProfile()
@@ -29,17 +27,16 @@ public class UpdateNameTest extends BaseUiTest {
         softly.assertThat(name).contains(newName);
         // !!! БАГ !!! Не изменяется, пока не обновишь страницу!!!
 
+        String userAuthHeader = RequestSpecs.getUserAuthHeader(SessionStorage.getUser().getUsername(), SessionStorage.getUser().getPassword());
         softly.assertThat(CustomerSteps.getName(userAuthHeader)).isEqualTo(newName);
     }
 
     @Test
+    @UserSession
     public void userCannotUpdateNameTest() {
         String name = "Noname";
         String newName = RandomData.getUsername();
-        CreateUserRequest userRequest = AdminSteps.createUserRequest();
-        String userAuthHeader = AdminSteps.createUser(userRequest.getUsername(), userRequest.getPassword());
 
-        authAsUser(userAuthHeader);
         String actualName = new EditProfilePage().open()
                 .newName(newName)
                 .checkAlertMessageAndAccept(BankAlert.NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY.getMessage())
@@ -47,6 +44,7 @@ public class UpdateNameTest extends BaseUiTest {
 
         softly.assertThat(actualName).contains(name);
 
+        String userAuthHeader = RequestSpecs.getUserAuthHeader(SessionStorage.getUser().getUsername(), SessionStorage.getUser().getPassword());
         softly.assertThat(CustomerSteps.getName(userAuthHeader)).isNull();
     }
 }

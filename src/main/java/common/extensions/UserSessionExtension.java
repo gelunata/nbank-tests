@@ -2,7 +2,6 @@ package common.extensions;
 
 import api.models.CreateUserRequest;
 import api.requests.steps.AdminSteps;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import common.annotations.UserSession;
 import common.storage.SessionStorage;
 import org.junit.jupiter.api.extension.BeforeEachCallback;

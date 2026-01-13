@@ -2,9 +2,9 @@ package ui.iteration2;
 
 import api.generators.RandomData;
 import api.models.AccountResponse;
-import api.requests.steps.AccountsSteps;
-import api.requests.steps.AdminSteps;
-import api.requests.steps.CustomerSteps;
+import common.annotations.Accounts;
+import common.annotations.UserSession;
+import common.storage.SessionStorage;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
 import ui.pages.BankAlert;
@@ -15,13 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DepositTest extends BaseUiTest {
     @Test
+    @UserSession
+    @Accounts
     public void userCanDepositMoneyIntoHisAccountTest() {
         double amount = RandomData.getDepositAmount();
 
-        String userAuthHeader = AdminSteps.createUser();
-        AccountResponse account = AccountsSteps.createAccount(userAuthHeader);
-
-        authAsUser(userAuthHeader);
+        AccountResponse account = SessionStorage.getSteps().getAllAccounts().getFirst();
 
         new UserDashboard().open()
                 .depositMoney()
@@ -30,33 +29,29 @@ public class DepositTest extends BaseUiTest {
                 .checkAlertMessageAndAccept(
                         BankAlert.SUCCESSFULLY_DEPOSITED_TO_ACCOUNT.format(amount, account.getAccountNumber()));
 
-        assertThat(CustomerSteps.getBalance(userAuthHeader, account.getId())).isEqualTo(amount);
+        assertThat(SessionStorage.getSteps().getAllAccounts().getFirst().getBalance()).isEqualTo(amount);
     }
 
     @Test
+    @UserSession
+    @Accounts
     public void userCannotDepositMoneyIntoHisAccountTest() {
         double amount = RandomData.getIncorrectDepositAmount();
 
-        String userAuthHeader = AdminSteps.createUser();
-        AccountResponse account = AccountsSteps.createAccount(userAuthHeader);
-
-        authAsUser(userAuthHeader);
+        AccountResponse account = SessionStorage.getSteps().getAllAccounts().getFirst();
 
         new DepositPage().open()
                 .deposit(account.getAccountNumber(), amount)
                 .checkAlertMessageAndAccept(BankAlert.PLEASE_DEPOSIT_LESS_OR_EQUAL_TO_5000.getMessage());
 
-        assertThat(CustomerSteps.getBalance(userAuthHeader, account.getId())).isZero();
+        assertThat(SessionStorage.getSteps().getAllAccounts().getFirst().getBalance()).isZero();
     }
 
     @Test
+    @UserSession
+    @Accounts
     public void userCannotDepositMoneyIfNoAccountIsSelectedTest() {
         double amount = RandomData.getDepositAmount();
-
-        String userAuthHeader = AdminSteps.createUser();
-        AccountsSteps.createAccount(userAuthHeader);
-
-        authAsUser(userAuthHeader);
 
         new DepositPage().open()
                 .deposit(amount)

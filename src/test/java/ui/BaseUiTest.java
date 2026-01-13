@@ -3,9 +3,7 @@ package ui;
 import api.BaseTest;
 import api.config.Config;
 import com.codeborne.selenide.Configuration;
-import common.extensions.AdminSessionExtension;
-import common.extensions.BrowserMatchExtension;
-import common.extensions.UserSessionExtension;
+import common.extensions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -13,6 +11,9 @@ import java.util.Map;
 
 @ExtendWith(AdminSessionExtension.class)
 @ExtendWith(UserSessionExtension.class)
+@ExtendWith(AccountsExtension.class)
+@ExtendWith(DepositExtension.class)
+@ExtendWith(TransferExtension.class)
 @ExtendWith(BrowserMatchExtension.class)
 public class BaseUiTest extends BaseTest {
     @BeforeAll

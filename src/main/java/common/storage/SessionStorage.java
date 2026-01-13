@@ -21,6 +21,10 @@ public class SessionStorage {
         }
     }
 
+    public static LinkedHashMap<CreateUserRequest, UserSteps> getUsers() {
+        return INSTANCE.userStepsMap;
+    }
+
     public static CreateUserRequest getUser(int number) {
         return new ArrayList<>(INSTANCE.userStepsMap.keySet()).get(number - 1);
     }
