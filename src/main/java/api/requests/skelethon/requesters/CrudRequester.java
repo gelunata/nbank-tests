@@ -1,16 +1,13 @@
 package api.requests.skelethon.requesters;
 
-import api.models.CreateUserResponse;
-import api.requests.skelethon.interfaces.GetAllEndpointInterface;
-import api.specs.RequestSpecs;
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import api.models.BaseModel;
 import api.requests.skelethon.Endpoint;
 import api.requests.skelethon.HttpRequest;
 import api.requests.skelethon.interfaces.CrudEndpointInterface;
-import org.apache.http.HttpStatus;
+import api.requests.skelethon.interfaces.GetAllEndpointInterface;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 
 import static io.restassured.RestAssured.given;
 
