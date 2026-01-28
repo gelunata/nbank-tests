@@ -13,7 +13,6 @@ import ui.pages.BankAlert;
 import ui.pages.TransferPage;
 
 import java.util.List;
-import java.util.Locale;
 
 import static com.codeborne.selenide.Condition.disabled;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +32,7 @@ public class TransferAgainTest extends BaseUiTest {
                 .repeat()
                 .repeatTransfer(accounts.get(1).getAccountNumber(), amount, true)
                 .checkAlertMessageAndAccept(BankAlert.TRANSFER_SUCCESSFUL_FROM_ACCOUNT_TO_ACCOUNT.format(
-                        String.format(Locale.UK, "%.2f", amount).replaceAll("\\.?0+$", ""),
-                        accounts.get(1).getId(), accounts.get(0).getId()));
+                        amount, accounts.get(1).getId(), accounts.get(0).getId()));
         // БАГ в выводе сообщения!!! Сообщение пишет, что перевел из recipient.getId() в recipient.getId()
 
         // БАГ Сообщение об успешности, а на самом деле через API ничего не перевелось. Сумма осталась на счетах.
