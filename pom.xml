@@ -12,19 +12,14 @@
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.jupiter.tags.excluded>slow</junit.jupiter.tags.excluded>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
+            <artifactId>junit-jupiter</artifactId>
             <version>6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>6.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -71,10 +66,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <!-- Версия Java -->
-                    <source>24</source>
-                    <target>24</target>
-
                     <!-- Подключаем Lombok как annotation processor -->
                     <annotationProcessorPaths>
                         <path>
@@ -85,6 +76,18 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <useModulePath>false</useModulePath> <!-- для JDK 9+ -->
+                    <properties>
+                        <configurationParameters>junit.jupiter.tags.excluded=slow</configurationParameters>
+                    </properties>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
