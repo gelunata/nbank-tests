@@ -22,6 +22,7 @@ public class BaseUiTest extends BaseTest {
         Configuration.baseUrl = Config.getProperty("uiBaseUrl");
         Configuration.browser = Config.getProperty("browser");
         Configuration.browserSize = Config.getProperty("browserSize");
+        Configuration.headless = true;
 
         Configuration.browserCapabilities.setCapability(
                 "selenoid:options",

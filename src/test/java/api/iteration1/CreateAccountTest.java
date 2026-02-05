@@ -1,9 +1,9 @@
 package api.iteration1;
 
-import org.junit.jupiter.api.Test;
 import api.requests.steps.AccountsSteps;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
