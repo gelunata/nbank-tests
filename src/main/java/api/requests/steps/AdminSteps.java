@@ -61,4 +61,8 @@ public class AdminSteps {
                 ResponseSpecs.requestReturnsOK())
                 .getAll(CreateUserResponse[].class);
     }
+
+    public static boolean hasUser(String username) {
+        return getAllUsers().stream().anyMatch(user -> user.getUsername().equals(username));
+    }
 }
