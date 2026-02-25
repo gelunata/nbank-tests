@@ -1,12 +1,18 @@
 package api.database;
 
 import api.config.Config;
-import api.dao.UserDao;
-import api.dao.comparison.AccountDao;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +21,10 @@ import java.util.List;
 public class DBRequest {
     private RequestType requestType;
     private String table;
+    private List<Join> joins;
     private List<Condition> conditions;
     private Class<?> extractAsClass;
+    private boolean count;
 
     public enum RequestType {
         SELECT, INSERT, UPDATE, DELETE
@@ -30,54 +38,36 @@ public class DBRequest {
     private <T> T executeQuery(Class<T> clazz) {
         String sql = buildSQL();
 
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(getDataSource());
 
-            // Set parameters for conditions
+        // Создаём PreparedStatementSetter для подстановки параметров
+        PreparedStatementSetter pss = ps -> {
             if (conditions != null) {
                 for (int i = 0; i < conditions.size(); i++) {
-                    statement.setObject(i + 1, conditions.get(i).getValue());
+                    ps.setObject(i + 1, conditions.get(i).getValue());
                 }
             }
-            // на подумать
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (clazz == UserDao.class) {
-                    return (T) mapToUserDao(resultSet);
-                }
-                if (clazz == AccountDao.class) {
-                    return (T) mapToAccountDao(resultSet);
-                }
-                // Add more mappings as needed
-                throw new UnsupportedOperationException("Mapping for " + clazz.getSimpleName() + " not implemented");
-            }
-        } catch (SQLException e) {
+        };
+
+        try {
+            List<T> results = jdbcTemplate.query(
+                    sql,
+                    pss,
+                    new BeanPropertyRowMapper<>(clazz)
+            );
+
+            return results.isEmpty() ? null : results.get(0);
+        } catch (DataAccessException e) {
             throw new RuntimeException("Database query failed", e);
         }
     }
 
-    private UserDao mapToUserDao(ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
-            return UserDao.builder()
-                    .id(resultSet.getLong("id"))
-                    .username(resultSet.getString("username"))
-                    .password(resultSet.getString("password"))
-                    .role(resultSet.getString("role"))
-                    .name(resultSet.getString("name"))
-                    .build();
-        }
-        return null;
-    }
-
-    private AccountDao mapToAccountDao(ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
-            return AccountDao.builder()
-                    .id(resultSet.getLong("id"))
-                    .accountNumber(resultSet.getString("account_number"))
-                    .balance(resultSet.getDouble("balance"))
-                    .customerId(resultSet.getLong("customer_id"))
-                    .build();
-        }
-        return null;
+    private DataSource getDataSource() {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setUrl(Config.getProperty("db.url"));
+        ds.setUsername(Config.getProperty("db.username"));
+        ds.setPassword(Config.getProperty("db.password"));
+        return ds;
     }
 
     private String buildSQL() {
@@ -85,12 +75,39 @@ public class DBRequest {
 
         switch (requestType) {
             case SELECT:
-                sql.append("SELECT * FROM ").append(table);
+                if (count) sql.append("SELECT COUNT(*) AS COUNT FROM ");
+                else sql.append("SELECT * FROM ");
+
+                sql.append(table);
+
+                if (joins != null && !joins.isEmpty()) {
+                    for (Join join : joins) {
+                        switch (join.getJoin()) {
+                            case Join.Joins.INNER:
+                                sql.append(" INNER JOIN ");
+                                break;
+                            case Join.Joins.LEFT:
+                                sql.append(" LEFT JOIN ");
+                                break;
+                            case Join.Joins.RIGHT:
+                                sql.append(" RIGHT JOIN ");
+                                break;
+                            default:
+                                throw new UnsupportedOperationException("Join type " + join + " not implemented");
+                        }
+                        sql.append(join.getTable1()).append(" ON ")
+                                .append(join.getTable1()).append(".").append(join.getColumn1()).append(" = ")
+                                .append(join.getTable2()).append(".").append(join.getColumn2());
+                    }
+                }
+
                 if (conditions != null && !conditions.isEmpty()) {
                     sql.append(" WHERE ");
                     for (int i = 0; i < conditions.size(); i++) {
                         if (i > 0) sql.append(" AND ");
-                        sql.append(conditions.get(i).getColumn()).append(" ").append(conditions.get(i).getOperator()).append(" ?");
+                        Condition c = conditions.get(i);
+                        if (c.getTable() != null) sql.append(c.getTable()).append(".");
+                        sql.append(c.getColumn()).append(" ").append(c.getOperator()).append(" ?");
                     }
                 }
                 break;
@@ -116,11 +133,18 @@ public class DBRequest {
     public static class DBRequestBuilder {
         private RequestType requestType;
         private String table;
+        private List<Join> joins = new ArrayList<>();
         private List<Condition> conditions = new ArrayList<>();
         private Class<?> extractAsClass;
+        private boolean count = false;
 
         public DBRequestBuilder requestType(RequestType requestType) {
             this.requestType = requestType;
+            return this;
+        }
+
+        public DBRequestBuilder join(Join join) {
+            this.joins.add(join);
             return this;
         }
 
@@ -134,13 +158,20 @@ public class DBRequest {
             return this;
         }
 
+        public DBRequestBuilder count(boolean count) {
+            this.count = count;
+            return this;
+        }
+
         public <T> T extractAs(Class<T> clazz) {
             this.extractAsClass = clazz;
             DBRequest request = DBRequest.builder()
                     .requestType(requestType)
                     .table(table)
+                    .joins(joins)
                     .conditions(conditions)
                     .extractAsClass(extractAsClass)
+                    .count(count)
                     .build();
             return request.extractAs(clazz);
         }

@@ -1,13 +1,15 @@
 package api.iteration2;
 
-import api.generators.RandomData;
 import api.BaseTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import api.dao.TransactionDao;
+import api.generators.RandomData;
 import api.requests.steps.AccountsSteps;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
+import api.requests.steps.DataBaseSteps;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.within;
 
@@ -29,6 +31,11 @@ public class TransferTest extends BaseTest {
 
         softly.assertThat(balance1 - amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, senderId), within(1e-9));
         softly.assertThat(balance2 + amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, receiverId), within(1e-9));
+
+        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
+        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
+        softly.assertThat(transactionSenderDao).isNotNull();
+        softly.assertThat(transactionReceiverDao).isNotNull();
     }
 
     @ValueSource(doubles = {-1.0, 0.0, 10000.01})
@@ -48,6 +55,11 @@ public class TransferTest extends BaseTest {
 
         softly.assertThat(balance1).isEqualTo(CustomerSteps.getBalance(userAuthorization, senderId));
         softly.assertThat(balance2).isEqualTo(CustomerSteps.getBalance(userAuthorization, receiverId));
+
+        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
+        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
+        softly.assertThat(transactionSenderDao).isNull();
+        softly.assertThat(transactionReceiverDao).isNull();
     }
 
     @Test
@@ -66,8 +78,15 @@ public class TransferTest extends BaseTest {
 
         AccountsSteps.transferMoney(userAuthorization1, senderId, receiverId, amount);
 
-        softly.assertThat(balance1 - amount).isEqualTo(CustomerSteps.getBalance(userAuthorization1, senderId));
-        softly.assertThat(balance2 + amount).isEqualTo(CustomerSteps.getBalance(userAuthorization2, receiverId));
+        softly.assertThat(balance1 - amount).isCloseTo(CustomerSteps.getBalance(userAuthorization1, senderId), within(1e-9));
+        softly.assertThat(balance2 + amount).isCloseTo(CustomerSteps.getBalance(userAuthorization2, receiverId), within(1e-9));
+
+        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
+        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
+        softly.assertThat(transactionSenderDao).isNotNull();
+        softly.assertThat(transactionReceiverDao).isNotNull();
+
+
     }
 
     @Test
@@ -87,6 +106,11 @@ public class TransferTest extends BaseTest {
 
         softly.assertThat(balance1).isEqualTo(CustomerSteps.getBalance(userAuthorization, senderId));
         softly.assertThat(balance2).isEqualTo(CustomerSteps.getBalance(userAuthorization, receiverId));
+
+        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
+        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
+        softly.assertThat(transactionSenderDao).isNull();
+        softly.assertThat(transactionReceiverDao).isNull();
     }
 
     private void depositRequiredAmount(String userAuthorization, long id, double amount) {

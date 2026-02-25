@@ -1,20 +1,31 @@
 package api.iteration2;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import api.BaseTest;
+import api.dao.UserDao;
+import api.dao.comparison.DaoAndModelAssertions;
+import api.models.CreateUserRequest;
+import api.models.UserProfileResponse;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
+import api.requests.steps.DataBaseSteps;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UpdateNameTest {
+public class UpdateNameTest extends BaseTest {
     @ValueSource(strings = {"John A", "a black"})
     @ParameterizedTest
     public void userCanUpdateNameTest(String newName) {
-        String userAuthorization = AdminSteps.createUser();
-        CustomerSteps.updateName(userAuthorization, newName);
+        CreateUserRequest createUserRequest = AdminSteps.createUserRequest();
+        String username = createUserRequest.getUsername();
+        String userAuthorization = AdminSteps.createUser(username, createUserRequest.getPassword());
+        UserProfileResponse userProfileResponse = CustomerSteps.updateName(userAuthorization, newName);
 
-        assertEquals(newName, CustomerSteps.getName(userAuthorization));
+        softly.assertThat(CustomerSteps.getName(userAuthorization)).isEqualTo(newName);
+
+        UserDao userDao = DataBaseSteps.getUserByUsername(username);
+        DaoAndModelAssertions.assertThat(userProfileResponse, userDao).match();
     }
 
     @ValueSource(strings = {"", "John", "Maria Anna Soul", // если не два слова
@@ -22,10 +33,15 @@ public class UpdateNameTest {
     })
     @ParameterizedTest
     public void userCannotUpdateNameTest(String newName) {
-        String userAuthorization = AdminSteps.createUser();
+        CreateUserRequest createUserRequest = AdminSteps.createUserRequest();
+        String username = createUserRequest.getUsername();
+        String userAuthorization = AdminSteps.createUser(username, createUserRequest.getPassword());
         String name = CustomerSteps.getName(userAuthorization);
         CustomerSteps.updateNameFailed(userAuthorization, newName);
 
         assertEquals(name, CustomerSteps.getName(userAuthorization));
+
+        UserDao userDao = DataBaseSteps.getUserByUsername(username);
+        softly.assertThat(userDao.getName()).isEqualTo(name);
     }
 }
