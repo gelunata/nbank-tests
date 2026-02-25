@@ -1,7 +1,7 @@
 package common.extensions;
 
 import api.models.CreateUserRequest;
-import api.requests.steps.AccountsSteps;
+import api.requests.steps.AccountSteps;
 import api.requests.steps.UserSteps;
 import api.specs.RequestSpecs;
 import common.annotations.Accounts;
@@ -21,7 +21,7 @@ public class AccountsExtension implements BeforeEachCallback {
                 CreateUserRequest user = entry.getKey();
                 String authHeader = RequestSpecs.getUserAuthHeader(user.getUsername(), user.getPassword());
                 for (int i = 0; i < accountCount; i++) {
-                    AccountsSteps.createAccount(authHeader);
+                    AccountSteps.createAccount(authHeader);
                 }
             }
         }

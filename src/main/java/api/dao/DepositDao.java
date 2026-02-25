@@ -16,5 +16,4 @@ public class DepositDao {
     private double amount;
     private String type;
     private String relatedAccount;
-    private long relatedAccountId;
 }
