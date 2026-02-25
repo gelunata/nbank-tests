@@ -6,7 +6,7 @@ import api.dao.DepositDao;
 import api.dao.comparison.DaoAndModelAssertions;
 import api.models.AccountResponse;
 import api.models.DepositResponse;
-import api.requests.steps.AccountSteps;
+import api.requests.steps.AccountsSteps;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
 import api.requests.steps.DataBaseSteps;
@@ -23,15 +23,15 @@ public class DepositTest extends BaseTest {
     @ParameterizedTest
     public void userCanDepositMoneyIntoHisAccountTest(double amount) {
         String userAuthorization = AdminSteps.createUser();
-        long id = AccountSteps.createAccount(userAuthorization)
+        long id = AccountsSteps.createAccount(userAuthorization)
                 .getId();
 
         double balance = CustomerSteps.getBalance(userAuthorization, id);
-        DepositResponse depositResponse = AccountSteps.depositMoney(userAuthorization, id, amount);
+        DepositResponse depositResponse = AccountsSteps.depositMoney(userAuthorization, id, amount);
 
         softly.assertThat(CustomerSteps.getBalance(userAuthorization, id)).isEqualTo(balance + amount);
 
-        DepositDao depositDao = DataBaseSteps.getTransactionById(depositResponse.getTransactionId());
+        DepositDao depositDao = DataBaseSteps.getTransactionById(depositResponse.getTransactions().get(0).getId());
         DaoAndModelAssertions.assertThat(depositResponse, depositDao).match();
     }
 
@@ -39,12 +39,12 @@ public class DepositTest extends BaseTest {
     @ParameterizedTest
     public void userCannotDepositMoneyIntoHisAccountTest(double amount) {
         String userAuthorization = AdminSteps.createUser();
-        long id = AccountSteps.createAccount(userAuthorization)
+        long id = AccountsSteps.createAccount(userAuthorization)
                 .getId();
         CountDao transactionDaoExpected = DataBaseSteps.countTransactionByAccountId(id);
 
         double balance = CustomerSteps.getBalance(userAuthorization, id);
-        AccountSteps.depositMoneyFailed(userAuthorization, id, amount);
+        AccountsSteps.depositMoneyFailed(userAuthorization, id, amount);
 
         assertEquals(balance, CustomerSteps.getBalance(userAuthorization, id));
 
@@ -57,7 +57,7 @@ public class DepositTest extends BaseTest {
         CountDao countRowsOfTransactionExpected = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
 
         String userAuthorization = AdminSteps.createUser();
-        AccountSteps.createAccount(userAuthorization);
+        AccountsSteps.createAccount(userAuthorization);
 
         AccountResponse[] accounts = CustomerSteps.getAccounts(userAuthorization).extract().as(AccountResponse[].class);
         long maxId = Arrays.stream(accounts)
@@ -65,7 +65,7 @@ public class DepositTest extends BaseTest {
                 .max()
                 .orElse(0);
 
-        AccountSteps.depositMoneyForbidden(userAuthorization, ++maxId, 500);
+        AccountsSteps.depositMoneyForbidden(userAuthorization, ++maxId, 500);
 
         CountDao countRowsOfTransactionActual = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
         softly.assertThat(countRowsOfTransactionActual).isEqualTo(countRowsOfTransactionExpected);

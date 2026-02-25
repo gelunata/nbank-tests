@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DepositDao {
+public class TransactionDao {
     private long accountId;
-    private String accountNumber;
-    private double balance;
     private double amount;
     private String type;
     private String relatedAccount;
