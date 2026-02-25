@@ -1,4 +1,4 @@
-package api.models;
+package api.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DepositRequest extends BaseModel {
-    private Long accountId;
+public class DepositDao {
+    private long accountId;
+    private String accountNumber;
+    private double balance;
     private double amount;
-    private String description;
+    private String type;
+    private String relatedAccount;
 }

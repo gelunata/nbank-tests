@@ -5,15 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DepositResponse extends BaseModel{
+public class DepositResponse extends BaseModel {
     private long id;
     private String accountNumber;
     private double balance;
-    private List<TransactionsResponse> transactions;
+    private double depositAmount;
+    private long transactionId;
 }

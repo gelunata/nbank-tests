@@ -2,7 +2,7 @@ package common.extensions;
 
 import api.models.AccountResponse;
 import api.models.CreateUserRequest;
-import api.requests.steps.AccountsSteps;
+import api.requests.steps.AccountSteps;
 import api.specs.RequestSpecs;
 import common.annotations.Transfer;
 import common.storage.SessionStorage;
@@ -25,7 +25,7 @@ public class TransferExtension implements BeforeEachCallback {
             CreateUserRequest userSender = SessionStorage.getUser(authSender);
             String authHeaderSender = RequestSpecs.getUserAuthHeader(userSender.getUsername(), userSender.getPassword());
 
-            AccountsSteps.transferMoney(authHeaderSender, accountSender.getId(), accountRecipientId, accountSender.getBalance());
+            AccountSteps.transferMoney(authHeaderSender, accountSender.getId(), accountRecipientId, accountSender.getBalance());
         }
     }
 }

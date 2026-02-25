@@ -3,7 +3,7 @@ package api.iteration1;
 import api.dao.comparison.AccountDao;
 import api.dao.comparison.DaoAndModelAssertions;
 import api.models.AccountResponse;
-import api.requests.steps.AccountsSteps;
+import api.requests.steps.AccountSteps;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.CustomerSteps;
 import api.requests.steps.DataBaseSteps;
@@ -16,7 +16,7 @@ public class CreateAccountTest {
     @Test
     public void userCanCreateAccountTest() {
         String userAuthorization = AdminSteps.createUser();
-        AccountResponse accountResponse = AccountsSteps.createAccount(userAuthorization);
+        AccountResponse accountResponse = AccountSteps.createAccount(userAuthorization);
 
         assertTrue(CustomerSteps.hasAccount(userAuthorization, accountResponse.getId()));
 

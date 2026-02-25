@@ -2,7 +2,7 @@ package common.extensions;
 
 import api.generators.RandomData;
 import api.models.CreateUserRequest;
-import api.requests.steps.AccountsSteps;
+import api.requests.steps.AccountSteps;
 import api.specs.RequestSpecs;
 import common.annotations.Deposit;
 import common.storage.SessionStorage;
@@ -21,7 +21,7 @@ public class DepositExtension implements BeforeEachCallback {
             CreateUserRequest user = SessionStorage.getUser(auth);
             String authHeader = RequestSpecs.getUserAuthHeader(user.getUsername(), user.getPassword());
 
-            AccountsSteps.depositMoney(authHeader, accountId, RandomData.getDepositAmount());
+            AccountSteps.depositMoney(authHeader, accountId, RandomData.getDepositAmount());
         }
     }
 }

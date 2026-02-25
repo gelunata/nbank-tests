@@ -1,15 +1,14 @@
 package api.requests.steps;
 
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.ResponseSpecification;
 import api.models.AccountResponse;
-import api.models.GetUserProfileResponse;
 import api.models.UpdateNameRequest;
+import api.models.UserProfileResponse;
 import api.requests.skelethon.Endpoint;
 import api.requests.skelethon.requesters.CrudRequester;
 import api.requests.skelethon.requesters.ValidatedCrudRequester;
 import api.specs.RequestSpecs;
 import api.specs.ResponseSpecs;
+import io.restassured.response.ValidatableResponse;
 
 import java.util.Arrays;
 
@@ -37,28 +36,30 @@ public class CustomerSteps {
                 .anyMatch(a -> a.getId() == id);
     }
 
-    public static void updateName(String userAuthorization, String newName) {
-        updateName(userAuthorization, newName, ResponseSpecs.requestReturnsOK());
+    public static UserProfileResponse updateName(String userAuthorization, String newName) {
+        return new ValidatedCrudRequester<UserProfileResponse>(
+                RequestSpecs.authAsUser(userAuthorization),
+                Endpoint.CUSTOMER_PROFILE,
+                ResponseSpecs.requestReturnsOK())
+                .put(getUpdateNameRequest(newName));
     }
 
     public static void updateNameFailed(String userAuthorization, String newName) {
-        updateName(userAuthorization, newName, ResponseSpecs.requestReturnsBadRequest());
-    }
-
-    private static void updateName(String userAuthorization, String newName, ResponseSpecification responseSpecification) {
-        UpdateNameRequest updateNameRequest = UpdateNameRequest.builder()
-                .name(newName)
-                .build();
-
         new CrudRequester(
                 RequestSpecs.authAsUser(userAuthorization),
                 Endpoint.CUSTOMER_PROFILE,
-                responseSpecification)
-                .put(updateNameRequest);
+                ResponseSpecs.requestReturnsBadRequest())
+                .put(getUpdateNameRequest(newName));
+    }
+
+    private static UpdateNameRequest getUpdateNameRequest(String name) {
+        return UpdateNameRequest.builder()
+                .name(name)
+                .build();
     }
 
     public static String getName(String userAuthorization) {
-        return new ValidatedCrudRequester<GetUserProfileResponse>(
+        return new ValidatedCrudRequester<UserProfileResponse>(
                 RequestSpecs.authAsUser(userAuthorization),
                 Endpoint.CUSTOMER_PROFILE,
                 ResponseSpecs.requestReturnsOK())
