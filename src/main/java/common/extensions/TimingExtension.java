@@ -12,14 +12,14 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 
     @Override
     public void beforeTestExecution(ExtensionContext context) throws Exception {
-        String testName = context.getRequiredTestMethod().getName() + "." + context.getDisplayName();
+        String testName = context.getUniqueId() + "." + context.getRequiredTestMethod().getName() + "." + context.getDisplayName();
         startTimes.put(testName, System.currentTimeMillis());
         System.out.println("Thread " + Thread.currentThread().getName() + ": Test started " + testName);
     }
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
-        String testName = context.getRequiredTestMethod().getName() + "." + context.getDisplayName();
+        String testName = context.getUniqueId() + "." + context.getRequiredTestMethod().getName() + "." + context.getDisplayName();
         Long testDuration = System.currentTimeMillis() - startTimes.get(testName);
         System.out.println("Thread " + Thread.currentThread().getName() + ": Test finished " + testName
                 + ", test duration " + testDuration + "ms");
