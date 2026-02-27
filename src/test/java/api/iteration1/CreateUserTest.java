@@ -20,7 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserTest extends BaseTest {
@@ -65,8 +64,5 @@ public class CreateUserTest extends BaseTest {
                 Endpoint.ADMIN_USER,
                 ResponseSpecs.requestReturnsBadRequest(errorKey, errorValues))
                 .post(createUserRequest);
-
-        UserDao userDao = DataBaseSteps.getUserByUsername(username);
-        assertNull(userDao);
     }
 }

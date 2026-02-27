@@ -52,7 +52,7 @@ public enum Endpoint {
     CUSTOMER_PROFILE(
             "/customer/profile",
             BaseModel.class,
-            UserProfileResponse.class
+            GetUserProfileResponse.class
 
     ),
 

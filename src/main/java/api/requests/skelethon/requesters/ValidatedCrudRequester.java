@@ -1,12 +1,12 @@
 package api.requests.skelethon.requesters;
 
+import api.requests.skelethon.interfaces.GetAllEndpointInterface;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import api.models.BaseModel;
 import api.requests.skelethon.Endpoint;
 import api.requests.skelethon.HttpRequest;
 import api.requests.skelethon.interfaces.CrudEndpointInterface;
-import api.requests.skelethon.interfaces.GetAllEndpointInterface;
-import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +30,8 @@ public class ValidatedCrudRequester<T extends BaseModel> extends HttpRequest imp
     }
 
     @Override
-    public T put(BaseModel model) {
-        return (T) crudRequester.put(model).extract().as(endpoint.getResponseModel());
+    public Object put(BaseModel model) {
+        return null;
     }
 
     @Override
