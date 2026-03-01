@@ -7,8 +7,10 @@ import common.annotations.FraudCheckMock;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import wiremock.com.fasterxml.jackson.core.JsonProcessingException;
+import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Locale;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -17,7 +19,7 @@ public class FraudCheckWireMockExtension implements BeforeEachCallback, AfterEac
     private WireMockServer wireMockServer;
 
     @Override
-    public void beforeEach(ExtensionContext context) {
+    public void beforeEach(ExtensionContext context) throws JsonProcessingException {
         // Find the FraudCheckMock annotation on the test method or class
         FraudCheckMock mockConfig = context.getTestMethod()
                 .map(method -> method.getAnnotation(FraudCheckMock.class))
@@ -30,26 +32,20 @@ public class FraudCheckWireMockExtension implements BeforeEachCallback, AfterEac
         }
     }
 
-    private void setupWireMock(FraudCheckMock config) {
+    private void setupWireMock(FraudCheckMock config) throws JsonProcessingException {
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(config.port()));
         wireMockServer.start();
         WireMock.configureFor("0.0.0.0", config.port());
 
         // Create the response body based on annotation parameters
-        String responseBody = String.format(Locale.UK, "{\n" +
-                        "  \"status\": \"%s\",\n" +
-                        "  \"decision\": \"%s\",\n" +
-                        "  \"riskScore\": %.1f,\n" +
-                        "  \"reason\": \"%s\",\n" +
-                        "  \"requiresManualReview\": %s,\n" +
-                        "  \"additionalVerificationRequired\": %s\n" +
-                        "}",
-                config.status(),
-                config.decision(),
-                config.riskScore(),
-                config.reason(),
-                config.requiresManualReview(),
-                config.additionalVerificationRequired());
+        Map<String, Object> body = Map.of(
+                "status", config.status(),
+                "decision", config.decision(),
+                "riskScore", config.riskScore(),
+                "reason", config.reason(),
+                "requiresManualReview", config.requiresManualReview(),
+                "additionalVerificationRequired", config.additionalVerificationRequired());
+        String responseBody = new ObjectMapper().writeValueAsString(body);
 
         // Mock the fraud detection service endpoint
         stubFor(post(urlPathMatching(config.endpoint()))
@@ -64,12 +60,5 @@ public class FraudCheckWireMockExtension implements BeforeEachCallback, AfterEac
         if (wireMockServer != null) {
             wireMockServer.stop();
         }
-    }
-
-    public String getBaseUrl() {
-        if (wireMockServer != null) {
-            return "http://host.docker.internal:" + wireMockServer.port();
-        }
-        return null;
     }
 }

@@ -6,6 +6,7 @@ import api.requests.skelethon.requesters.ValidatedCrudRequester;
 import api.specs.RequestSpecs;
 import api.specs.ResponseSpecs;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class UserSteps {
@@ -18,10 +19,12 @@ public class UserSteps {
     }
 
     public List<AccountResponse> getAllAccounts() {
-        return new ValidatedCrudRequester<AccountResponse>(
+        List<AccountResponse> accounts = new ValidatedCrudRequester<AccountResponse>(
                 RequestSpecs.authAsUser(username, password),
                 Endpoint.CUSTOMER_ACCOUNTS,
                 ResponseSpecs.requestReturnsOK())
                 .getAll(AccountResponse[].class);
+        accounts.sort(Comparator.comparing(AccountResponse::getId));
+        return accounts;
     }
 }
