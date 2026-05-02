@@ -61,7 +61,6 @@ public class AccountSteps {
                     .senderAccountId(senderId)
                     .receiverAccountId(receiverId)
                     .amount(amount)
-                    .description("Test transfer with fraud check")
                     .build();
 
             return new ValidatedCrudRequester<TransferResponse>(
@@ -72,7 +71,21 @@ public class AccountSteps {
         });
     }
 
-    public static TransferResponse transferWithFraudCheck(String userAuthorization, Long senderAccountId, Long receiverAccountId, double amount) {
+    public static void transferMoneyFailed(String userAuthorization, long senderId, long receiverId, double amount) {
+        TransferRequest transferRequest = TransferRequest.builder()
+                .senderAccountId(senderId)
+                .receiverAccountId(receiverId)
+                .amount(amount)
+                .build();
+
+        new CrudRequester(
+                RequestSpecs.authAsUser(userAuthorization),
+                Endpoint.ACCOUNTS_TRANSFER,
+                ResponseSpecs.requestReturnsBadRequest())
+                .post(transferRequest);
+    }
+
+    public static TransferResponse transferWithFraudCheck(String username, String password, Long senderAccountId, Long receiverAccountId, double amount) {
         return StepLogger.log("User transfers " + amount + " to " + receiverAccountId + " with fraud check", () -> {
             TransferRequest transferRequest = TransferRequest.builder()
                     .senderAccountId(senderAccountId)
@@ -82,24 +95,27 @@ public class AccountSteps {
                     .build();
 
             return new ValidatedCrudRequester<TransferResponse>(
-                    RequestSpecs.authAsUser(userAuthorization),
+                    RequestSpecs.authAsUser(username, password),
                     Endpoint.TRANSFER_WITH_FRAUD_CHECK,
-                    ResponseSpecs.requestReturnsOK()).post(transferRequest);
+                    ResponseSpecs.requestReturnsOK())
+                    .post(transferRequest);
         });
     }
 
-    public static void transferMoneyFailed(String userAuthorization, long senderId, long receiverId, double amount) {
-        TransferRequest transferRequest = TransferRequest.builder()
-                .senderAccountId(senderId)
-                .receiverAccountId(receiverId)
-                .amount(amount)
-                .description("Test transfer with fraud check")
-                .build();
+    public static void transferWithFraudCheckFailed(String username, String password, Long senderAccountId, Long receiverAccountId, double amount) {
+        StepLogger.log("User transfers " + amount + " to " + receiverAccountId + " with fraud check", () -> {
+            TransferRequest transferRequest = TransferRequest.builder()
+                    .senderAccountId(senderAccountId)
+                    .receiverAccountId(receiverAccountId)
+                    .amount(amount)
+                    .description("Test transfer with fraud check")
+                    .build();
 
-        new CrudRequester(
-                RequestSpecs.authAsUser(userAuthorization),
-                Endpoint.ACCOUNTS_TRANSFER,
-                ResponseSpecs.requestReturnsBadRequest())
-                .post(transferRequest);
+            new CrudRequester(
+                    RequestSpecs.authAsUser(username, password),
+                    Endpoint.TRANSFER_WITH_FRAUD_CHECK,
+                    ResponseSpecs.requestReturnsBadRequest())
+                    .post(transferRequest);
+        });
     }
 }

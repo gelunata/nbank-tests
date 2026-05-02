@@ -21,7 +21,15 @@ public class DepositExtension implements BeforeEachCallback {
             CreateUserRequest user = SessionStorage.getUser(auth);
             String authHeader = RequestSpecs.getUserAuthHeader(user.getUsername(), user.getPassword());
 
-            AccountSteps.depositMoney(authHeader, accountId, RandomData.getDepositAmount());
+            if (annotation.value() < 0) {
+                AccountSteps.depositMoney(authHeader, accountId, RandomData.getDepositAmount());
+            } else {
+                double amount = annotation.value();
+                do {
+                    AccountSteps.depositMoney(authHeader, accountId, 5000);
+                    amount -= 5000;
+                } while (amount > 0);
+            }
         }
     }
 }
