@@ -29,12 +29,15 @@ USER root
 # mvn test -p api
 # mvn -DskipTests=true surfire report:report
 # лог выводился не в консоль, а в файл
-CMD /bin/bash -c " \
-    mkdir -p /app/logs ; \
+CMD mkdir -p /app/logs && \
     { \
-        echo '>>> Running tests with profile ${TEST_PROFILE}' ; \
-        mvn test -q -P ${TEST_PROFILE} ; \
+        echo ">>> Running tests with profile ${TEST_PROFILE}" ; \
+        mvn test -P ${TEST_PROFILE} ; \
+        TEST_EXIT_CODE=$PIPESTATUS ; \
         \
-        echo '>>> Running surefire-report:report' ; \
+        echo ">>> Running surefire-report:report" ; \
         mvn -DskipTests=true surefire-report:report ; \
-    } > /app/logs/run.log 2>&1"
+        \
+        exit $TEST_EXIT_CODE ; \
+    } 2>&1 | tee /app/logs/run.log ; \
+    exit ${PIPESTATUS}
