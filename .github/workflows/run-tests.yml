@@ -15,7 +15,7 @@ jobs: #  аналог этапов
         uses: actions/setup-java@v5
         with:
           distribution: 'corretto'
-          java-version: '21'
+          java-version: '24'
 
       - name: Cash Maven repository
         uses: actions/cache@v5
