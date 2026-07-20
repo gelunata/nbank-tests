@@ -1,19 +1,36 @@
 services:
   backend:
-    image: nobugsme/nbank:with_validation_fix
+    image: nobugsme/nbank:preprod_version
     ports:
       - "4111:4111"
     networks:
       - nbank-network
 
   frontend:
-    image: nobugsme/nbank-ui:latest
+    image: nobugsme/nbank-ui:preprod_version
     expose: # не открываем порт наружу, а даем доступ контейнерам в сети
       - "80"
     depends_on:
       - backend
     networks:
       - nbank-network
+
+  postgres:
+    image: postgres:15
+    container_name: nbank-postgres
+    environment:
+      POSTGRES_DB: nbank
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nginx:
     image: nginx:latest
@@ -34,7 +51,7 @@ services:
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
       - ./config/:/etc/selenoid/:ro
-    command: ["-container-network", "nbank-network"]
+    command: [ "-container-network", "nbank-network" ]
     depends_on:
       - frontend
     networks:
@@ -44,7 +61,7 @@ services:
     image: aerokube/selenoid-ui:latest
     ports:
       - "6567:8080"
-    command: ["--selenoid-uri", "http://selenoid:4444"]
+    command: [ "--selenoid-uri", "http://selenoid:4444" ]
     depends_on:
       - selenoid
     networks:
@@ -53,3 +70,6 @@ services:
 networks:
   nbank-network:
     name: nbank-network
+
+volumes:
+  postgres_data:
