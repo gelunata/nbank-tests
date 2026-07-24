@@ -1,15 +1,17 @@
 services:
   backend:
-    image: nobugsme/nbank:preprod_version
+    image: nobugsme/nbank:with_username_error_fix
     ports:
       - "4111:4111"
     networks:
       - nbank-network
 
   frontend:
-    image: nobugsme/nbank-ui:preprod_version
-    expose: # не открываем порт наружу, а даем доступ контейнерам в сети
-      - "80"
+    image: nobugsme/nbank-ui:with_nginx
+    # expose: # не открываем порт наружу, а даем доступ контейнерам в сети
+    #  - "80"
+    ports:
+      - "3000:80"
     depends_on:
       - backend
     networks:
