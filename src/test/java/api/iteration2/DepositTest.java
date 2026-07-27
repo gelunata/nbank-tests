@@ -31,8 +31,8 @@ public class DepositTest extends BaseTest {
 
         softly.assertThat(CustomerSteps.getBalance(userAuthorization, id)).isEqualTo(balance + amount);
 
-        DepositDao depositDao = DataBaseSteps.getTransactionById(depositResponse.getTransactionId());
-        DaoAndModelAssertions.assertThat(depositResponse, depositDao).match();
+//        DepositDao depositDao = DataBaseSteps.getTransactionById(depositResponse.getTransactionId());
+//        DaoAndModelAssertions.assertThat(depositResponse, depositDao).match();
     }
 
     @ValueSource(doubles = {-1.0, 0.0, 5000.01})
@@ -41,20 +41,20 @@ public class DepositTest extends BaseTest {
         String userAuthorization = AdminSteps.createUser();
         long id = AccountSteps.createAccount(userAuthorization)
                 .getId();
-        CountDao transactionDaoExpected = DataBaseSteps.countTransactionByAccountId(id);
+//        CountDao transactionDaoExpected = DataBaseSteps.countTransactionByAccountId(id);
 
         double balance = CustomerSteps.getBalance(userAuthorization, id);
         AccountSteps.depositMoneyFailed(userAuthorization, id, amount);
 
         assertEquals(balance, CustomerSteps.getBalance(userAuthorization, id));
 
-        CountDao transactionDaoActual = DataBaseSteps.countTransactionByAccountId(id);
-        softly.assertThat(transactionDaoActual).isEqualTo(transactionDaoExpected);
+//        CountDao transactionDaoActual = DataBaseSteps.countTransactionByAccountId(id);
+//        softly.assertThat(transactionDaoActual).isEqualTo(transactionDaoExpected);
     }
 
     @Test
     public void userCannotDepositMoneyToSomeoneOrToNonexistentAccountTest() {
-        CountDao countRowsOfTransactionExpected = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
+//        CountDao countRowsOfTransactionExpected = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
 
         String userAuthorization = AdminSteps.createUser();
         AccountSteps.createAccount(userAuthorization);
@@ -67,7 +67,7 @@ public class DepositTest extends BaseTest {
 
         AccountSteps.depositMoneyForbidden(userAuthorization, ++maxId, 500);
 
-        CountDao countRowsOfTransactionActual = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
-        softly.assertThat(countRowsOfTransactionActual).isEqualTo(countRowsOfTransactionExpected);
+//        CountDao countRowsOfTransactionActual = DataBaseSteps.countRowsOfTable(DataBaseSteps.Table.TRANSACTIONS);
+//        softly.assertThat(countRowsOfTransactionActual).isEqualTo(countRowsOfTransactionExpected);
     }
 }

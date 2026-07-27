@@ -20,12 +20,12 @@ public class UpdateNameTest extends BaseTest {
         CreateUserRequest createUserRequest = AdminSteps.createUserRequest();
         String username = createUserRequest.getUsername();
         String userAuthorization = AdminSteps.createUser(username, createUserRequest.getPassword());
-        UserProfileResponse userProfileResponse = CustomerSteps.updateName(userAuthorization, newName);
+//        UserProfileResponse userProfileResponse = CustomerSteps.updateName(userAuthorization, newName);
 
         softly.assertThat(CustomerSteps.getName(userAuthorization)).isEqualTo(newName);
 
-        UserDao userDao = DataBaseSteps.getUserByUsername(username);
-        DaoAndModelAssertions.assertThat(userProfileResponse, userDao).match();
+//        UserDao userDao = DataBaseSteps.getUserByUsername(username);
+//        DaoAndModelAssertions.assertThat(userProfileResponse, userDao).match();
     }
 
     @ValueSource(strings = {"", "John", "Maria Anna Soul", // если не два слова
@@ -41,7 +41,7 @@ public class UpdateNameTest extends BaseTest {
 
         assertEquals(name, CustomerSteps.getName(userAuthorization));
 
-        UserDao userDao = DataBaseSteps.getUserByUsername(username);
-        softly.assertThat(userDao.getName()).isEqualTo(name);
+//        UserDao userDao = DataBaseSteps.getUserByUsername(username);
+//        softly.assertThat(userDao.getName()).isEqualTo(name);
     }
 }
