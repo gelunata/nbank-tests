@@ -1,13 +1,17 @@
 services:
   backend:
-    image: nobugsme/nbank:with_username_error_fix
+    image: nobugsme/nbank:preprod_version
     ports:
       - "4111:4111"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/nbank
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
     networks:
       - nbank-network
 
   frontend:
-    image: nobugsme/nbank-ui:with_nginx
+    image: nobugsme/nbank-ui:preprod_version
     # expose: # не открываем порт наружу, а даем доступ контейнерам в сети
     #  - "80"
     ports:
@@ -17,24 +21,24 @@ services:
     networks:
       - nbank-network
 
-#  postgres:
-#    image: postgres:15
-#    container_name: nbank-postgres
-#    environment:
-#      POSTGRES_DB: nbank
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
-#    networks:
-#      - nbank-network
+  postgres:
+    image: postgres:15
+    container_name: nbank-postgres
+    environment:
+      POSTGRES_DB: nbank
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nbank-network
 
   selenoid:
     image: aerokube/selenoid:latest

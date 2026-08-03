@@ -32,10 +32,10 @@ public class TransferTest extends BaseTest {
         softly.assertThat(balance1 - amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, senderId), within(1e-9));
         softly.assertThat(balance2 + amount).isCloseTo(CustomerSteps.getBalance(userAuthorization, receiverId), within(1e-9));
 
-//        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
-//        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
-//        softly.assertThat(transactionSenderDao).isNotNull();
-//        softly.assertThat(transactionReceiverDao).isNotNull();
+        TransactionDao transactionSenderDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(senderId, DataBaseSteps.TransferType.TRANSFER_OUT);
+        TransactionDao transactionReceiverDao = DataBaseSteps.getTransactionByAccountIdAndTransferType(receiverId, DataBaseSteps.TransferType.TRANSFER_IN);
+        softly.assertThat(transactionSenderDao).isNotNull();
+        softly.assertThat(transactionReceiverDao).isNotNull();
     }
 
     @ValueSource(doubles = {-1.0, 0.0, 10000.01})

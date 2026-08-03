@@ -20,7 +20,7 @@ public class CreateAccountTest {
 
         assertTrue(CustomerSteps.hasAccount(userAuthorization, accountResponse.getId()));
 
-//        AccountDao accountDao = DataBaseSteps.getAccountByAccountNumber(accountResponse.getAccountNumber());
-//        DaoAndModelAssertions.assertThat(accountResponse, accountDao).match();
+        AccountDao accountDao = DataBaseSteps.getAccountByAccountNumber(accountResponse.getAccountNumber());
+        DaoAndModelAssertions.assertThat(accountResponse, accountDao).match();
     }
 }
