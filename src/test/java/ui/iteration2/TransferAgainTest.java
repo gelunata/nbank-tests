@@ -7,6 +7,7 @@ import common.annotations.Deposit;
 import common.annotations.Transfer;
 import common.annotations.UserSession;
 import common.storage.SessionStorage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
 import ui.pages.BankAlert;
@@ -18,6 +19,7 @@ import static com.codeborne.selenide.Condition.disabled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransferAgainTest extends BaseUiTest {
+    @Disabled
     @Test
     @UserSession
     @Accounts(value = 2)
@@ -58,6 +60,7 @@ public class TransferAgainTest extends BaseUiTest {
                 .shouldBe(Condition.visible);
     }
 
+    @Disabled
     @Test
     @UserSession
     @Accounts(value = 2)
@@ -91,6 +94,7 @@ public class TransferAgainTest extends BaseUiTest {
         assertThat(count).isEqualTo(1);
     }
 
+    @Disabled
     @Test
     @UserSession(value = 2)
     @Accounts

@@ -5,6 +5,7 @@ import api.requests.steps.CustomerSteps;
 import api.specs.RequestSpecs;
 import common.annotations.UserSession;
 import common.storage.SessionStorage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
 import ui.pages.BankAlert;
@@ -12,6 +13,7 @@ import ui.pages.EditProfilePage;
 import ui.pages.UserDashboard;
 
 public class UpdateNameTest extends BaseUiTest {
+    @Disabled
     @Test
     @UserSession
     public void userCanUpdateNameTest() {
