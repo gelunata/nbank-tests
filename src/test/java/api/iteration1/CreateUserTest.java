@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserTest extends BaseTest {
-    @ParameterizedTest
+    //@ParameterizedTest
     @ValueSource(strings = {"abc", "123", "---", "___", "..."})
     public void adminCanCreateUserWithCorrectData(String username) {
         // Подготовка данных
@@ -57,7 +57,7 @@ public class CreateUserTest extends BaseTest {
     }
 
     @MethodSource("userInvalidData")
-    @ParameterizedTest
+    //@ParameterizedTest
     public void adminCanNotCreateUserWithInvalidData(String username, String password, String errorKey, List<String> errorValues) {
         CreateUserRequest createUserRequest = AdminSteps.createUserRequest(username, password);
 

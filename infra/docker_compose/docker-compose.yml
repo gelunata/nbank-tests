@@ -44,12 +44,23 @@ services:
     image: aerokube/selenoid:latest
     ports:
       - "4444:4444"
+    environment:
+      - DOCKER_API_VERSION=1.52
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config/:/etc/selenoid/:ro
     command: [ "-container-network", "nbank-network" ]
+    extra_hosts:
+      - "localhost:host-gateway"
     depends_on:
       - frontend
+      - chrome-browser
+    networks:
+      - nbank-network
+
+  chrome-browser:
+    image: selenoid/vnc:chrome_91.0
+    entrypoint: [ "echo", "Chrome image is ready" ]
     networks:
       - nbank-network
 

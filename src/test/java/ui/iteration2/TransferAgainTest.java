@@ -53,9 +53,10 @@ public class TransferAgainTest extends BaseUiTest {
 
         new TransferPage().open()
                 .transferAgain()
+                .selectAccount(accounts.getFirst().getAccountNumber())
                 .repeat()
                 .repeatTransfer(accounts.get(1).getAccountNumber(), amount + 0.01, true)
-                .checkAlertMessageAndAccept(BankAlert.TRANSFER_FAILED_PLEASE_TRY_AGAIN.getMessage())
+                .checkAlertMessageAndAccept(BankAlert.ERROR_INVALID_TRANSFER.getMessage())
                 .getRepeatTransferTitle()
                 .shouldBe(Condition.visible);
     }
@@ -79,6 +80,7 @@ public class TransferAgainTest extends BaseUiTest {
         // как и при других случаях, когда одно из других полей не заполнено.
     }
 
+    @Disabled("Removed search by filter")
     @Test
     @UserSession(value = 2)
     @Accounts
