@@ -20,8 +20,7 @@ public class TransferPage extends BasePage<TransferPage> {
     private SelenideElement confirmCheck = $("#confirmCheck");
     private SelenideElement transferButton = $(byText("\uD83D\uDE80 Send Transfer"));
     private SelenideElement transferAgainButton = $(byText("🔁 Transfer Again"));
-    private SelenideElement repeatButton = $("ul.list-group").find(byText("TRANSFER_IN")).parent()
-            .find(withText("🔁 Repeat"));
+    private SelenideElement repeatButton = $("ul.list-group").find(byText("🔁 Repeat"));
     private SelenideElement repeatTransferTitle = $(byText("\uD83D\uDD01 Repeat Transfer"));
     private SelenideElement senderAccountRepeatSelector = $(Selectors.byText("-- Choose an account --")).parent();
     private SelenideElement amountRepeatInput = $("input.form-control[type='number']");
@@ -50,6 +49,11 @@ public class TransferPage extends BasePage<TransferPage> {
 
     public TransferPage transferAgain() {
         transferAgainButton.click();
+        return this;
+    }
+
+    public TransferPage selectAccount(String account) {
+        senderAccountRepeatSelector.selectOptionContainingText(account);
         return this;
     }
 

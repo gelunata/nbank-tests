@@ -14,8 +14,5 @@ public class TransactionsResponse extends BaseModel {
     private double amount;
     private String type;
     private String timestamp;
-    private String relatedAccount;
-    private String timestampAsString;
     private long relatedAccountId;
-    private double amountAsDouble;
 }

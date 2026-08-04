@@ -8,6 +8,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import ui.elements.BaseElement;
 
 import java.util.List;
@@ -34,7 +35,9 @@ public abstract class BasePage<T extends BasePage> {
     }
 
     public T checkAlertMessageAndAccept(String bankAlert) {
-        Alert alert = switchTo().alert();
+        Alert alert = Selenide.Wait()
+                .withMessage("Браузерное уведомление (Alert) не появилось!")
+                .until(ExpectedConditions.alertIsPresent());
         assertThat(alert.getText()).contains(bankAlert);
         alert.accept();
         return (T) this;

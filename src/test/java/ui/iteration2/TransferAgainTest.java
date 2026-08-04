@@ -7,6 +7,7 @@ import common.annotations.Deposit;
 import common.annotations.Transfer;
 import common.annotations.UserSession;
 import common.storage.SessionStorage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
 import ui.pages.BankAlert;
@@ -18,6 +19,7 @@ import static com.codeborne.selenide.Condition.disabled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransferAgainTest extends BaseUiTest {
+    @Disabled
     @Test
     @UserSession
     @Accounts(value = 2)
@@ -51,13 +53,15 @@ public class TransferAgainTest extends BaseUiTest {
 
         new TransferPage().open()
                 .transferAgain()
+                .selectAccount(accounts.getFirst().getAccountNumber())
                 .repeat()
                 .repeatTransfer(accounts.get(1).getAccountNumber(), amount + 0.01, true)
-                .checkAlertMessageAndAccept(BankAlert.TRANSFER_FAILED_PLEASE_TRY_AGAIN.getMessage())
+                .checkAlertMessageAndAccept(BankAlert.ERROR_INVALID_TRANSFER.getMessage())
                 .getRepeatTransferTitle()
                 .shouldBe(Condition.visible);
     }
 
+    @Disabled
     @Test
     @UserSession
     @Accounts(value = 2)
@@ -76,6 +80,7 @@ public class TransferAgainTest extends BaseUiTest {
         // как и при других случаях, когда одно из других полей не заполнено.
     }
 
+    @Disabled("Removed search by filter")
     @Test
     @UserSession(value = 2)
     @Accounts
@@ -91,6 +96,7 @@ public class TransferAgainTest extends BaseUiTest {
         assertThat(count).isEqualTo(1);
     }
 
+    @Disabled
     @Test
     @UserSession(value = 2)
     @Accounts

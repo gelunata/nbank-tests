@@ -13,11 +13,10 @@ public enum BankAlert {
     SUCCESSFULLY_DEPOSITED_TO_ACCOUNT("✅ Successfully deposited $%s to account %s!"),
     PLEASE_DEPOSIT_LESS_OR_EQUAL_TO_5000("❌ Please deposit less or equal to 5000$."),
     PLEASE_SELECT_AN_ACCOUNT("❌ Please select an account."),
-    SUCCESSFULLY_TRANSFERRED_TO_ACCOUNT("✅ Successfully transferred $%f to account %s!"),
-    ERROR_INVALID_TRANSFER("❌ Error: Invalid transfer: insufficient funds or invalid accounts"),
+    SUCCESSFULLY_TRANSFERRED_TO_ACCOUNT("✅ Successfully transferred $%s to account %s!"),
+    ERROR_INVALID_TRANSFER("Invalid transfer: insufficient funds or invalid accounts"),
     PLEASE_FILL_ALL_FIELDS_AND_CONFIRM("❌ Please fill all fields and confirm."),
     TRANSFER_SUCCESSFUL_FROM_ACCOUNT_TO_ACCOUNT("✅ Transfer of $%f successful from Account %d to %d!"),
-    TRANSFER_FAILED_PLEASE_TRY_AGAIN("❌ Transfer failed: Please try again."),
     NAME_UPDATE_SUCCESSFULLY("✅ Name updated successfully!"),
     NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY("Name must contain two words with letters only");
 
