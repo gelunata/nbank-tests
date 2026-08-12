@@ -96,7 +96,7 @@ public class TransferAgainTest extends BaseUiTest {
         assertThat(count).isEqualTo(1);
     }
 
-    @Disabled
+    @Disabled("Bag")
     @Test
     @UserSession(value = 2)
     @Accounts
