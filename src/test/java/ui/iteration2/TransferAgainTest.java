@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Condition.disabled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransferAgainTest extends BaseUiTest {
-    @Disabled
+    @Disabled("Bag")
     @Test
     @UserSession
     @Accounts(value = 2)
