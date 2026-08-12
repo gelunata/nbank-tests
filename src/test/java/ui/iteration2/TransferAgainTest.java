@@ -61,7 +61,7 @@ public class TransferAgainTest extends BaseUiTest {
                 .shouldBe(Condition.visible);
     }
 
-    @Disabled
+    @Disabled("Bag")
     @Test
     @UserSession
     @Accounts(value = 2)
