@@ -11,7 +11,7 @@ import java.util.List;
  * Хранилище сессий пользователей для многопоточного выполнения тестов.
  * Использует {@link ThreadLocal} для изоляции данных между потоками.
  */
-public class SessionStorage {
+public final class SessionStorage {
     /**
      * Потокобезопасный экземпляр хранилища для текущего потока.
      */
@@ -33,7 +33,7 @@ public class SessionStorage {
      *
      * @param users список запросов на создание пользователей
      */
-    public static void addUsers(List<CreateUserRequest> users) {
+    public static void addUsers(final List<CreateUserRequest> users) {
         for (CreateUserRequest user : users) {
             INSTANCE.get().userStepsMap.put(user, new UserSteps(user.getUsername(), user.getPassword()));
         }
@@ -54,7 +54,7 @@ public class SessionStorage {
      * @param number порядковый номер пользователя
      * @return запрос на создание пользователя
      */
-    public static CreateUserRequest getUser(int number) {
+    public static CreateUserRequest getUser(final int number) {
         return new ArrayList<>(INSTANCE.get().userStepsMap.keySet()).get(number - 1);
     }
 
@@ -73,7 +73,7 @@ public class SessionStorage {
      * @param number порядковый номер пользователя
      * @return объект с шагами API пользователя
      */
-    public static UserSteps getSteps(int number) {
+    public static UserSteps getSteps(final int number) {
         return new ArrayList<>(INSTANCE.get().userStepsMap.values()).get(number - 1);
     }
 

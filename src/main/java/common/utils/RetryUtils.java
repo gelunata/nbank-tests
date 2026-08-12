@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * Утилитарный класс для повторного выполнения операций при возникновении сбоев (Retry механизм).
  * Предоставляет методы для ожидания выполнения условий в автотестах.
  */
-public class RetryUtils {
+public final class RetryUtils {
     /**
      * Повторяет выполнение действия до тех пор, пока оно не завершится успешно или не исчерпает попытки.
      *
@@ -17,10 +17,10 @@ public class RetryUtils {
      * @param delayMillis время ожидания в миллисекундах между попытками
      */
     public static <T> T retry(
-            Supplier<T> action,
-            Predicate<T> condition,
-            int maxAttempts,
-            long delayMillis
+            final Supplier<T> action,
+            final Predicate<T> condition,
+            final int maxAttempts,
+            final long delayMillis
     ) {
         T result = null;
         int attempts = 0;
