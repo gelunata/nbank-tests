@@ -7,11 +7,24 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Хранилище сессий пользователей для многопоточного выполнения тестов.
+ * Использует {@link ThreadLocal} для изоляции данных между потоками.
+ */
 public class SessionStorage {
+    /**
+     * Потокобезопасный экземпляр хранилища для текущего потока.
+     */
     private static final ThreadLocal<SessionStorage> INSTANCE = ThreadLocal.withInitial(SessionStorage::new);
 
+    /**
+     * Карта, связывающая запросы на создание пользователей с их шагами API.
+     */
     private final LinkedHashMap<CreateUserRequest, UserSteps> userStepsMap = new LinkedHashMap<>();
 
+    /**
+     * Приватный конструктор для предотвращения создания экземпляров извне.
+     */
     private SessionStorage() {
     }
 
