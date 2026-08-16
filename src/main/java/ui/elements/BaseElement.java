@@ -11,7 +11,7 @@ public abstract class BaseElement {
 
     // CHECKSTYLE:OFF: VisibilityModifier
     /** Ссылка на базовый Selenide элемент. */
-    protected final SelenideElement element;
+    private final SelenideElement element;
     // CHECKSTYLE:ON: VisibilityModifier
 
     /**

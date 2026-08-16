@@ -6,9 +6,9 @@ import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selenide.$;
 
 public class DepositPage extends BasePage<DepositPage> {
-    private SelenideElement accountSelector = $(".form-control.account-selector");
-    private SelenideElement amountInput = $(".form-control.deposit-input");
-    private SelenideElement depositButton = $(Selectors.byText("\uD83D\uDCB5 Deposit"));
+    private final SelenideElement accountSelector = $(".form-control.account-selector");
+    private final SelenideElement amountInput = $(".form-control.deposit-input");
+    private final SelenideElement depositButton = $(Selectors.byText("\uD83D\uDCB5 Deposit"));
 
     @Override
     public String url() {
