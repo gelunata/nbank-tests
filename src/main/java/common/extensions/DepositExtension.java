@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 public final class DepositExtension implements BeforeEachCallback {
+    /** Лимит разового пополнения счета. */
     private static final double DEPOSIT_LIMIT = 5000.0;
 
     @Override
