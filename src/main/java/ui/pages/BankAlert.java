@@ -25,7 +25,7 @@ public enum BankAlert {
      *
      * @return строка сообщения
      */
-    public String getValue() {
+    public String getMessage() {
         switch (this) {
             case USER_CREATED_SUCCESSFULLY:
                 return "✅ User created successfully!";
@@ -71,6 +71,6 @@ public enum BankAlert {
             }
         }).toArray();
 
-        return String.format(Locale.UK, this.getValue(), newArgs);
+        return String.format(Locale.UK, this.getMessage(), newArgs);
     }
 }
