@@ -45,7 +45,7 @@ public class CreateUserTest extends BaseUiTest {
                 .checkAlertMessageAndAccept(BankAlert.USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS.getMessage())
                 .getAllUsers()
                 .stream()
-                .noneMatch(userBage -> userBage.getUsername().equals(newUser.getUsername())));
+                .noneMatch(userPage -> userPage.getUsername().equals(newUser.getUsername())));
 
         long usersWithSameUsernameAsNewUser = AdminSteps.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))

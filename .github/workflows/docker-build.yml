@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./infra/docker_compose/docker-compose.yml
+          file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/your-repo-name:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/nbank-tests:${{ github.sha }}
