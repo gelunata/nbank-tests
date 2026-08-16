@@ -41,7 +41,11 @@ public class TransferTest extends BaseUiTest {
         double amount = SessionStorage.getSteps().getAllAccounts().getFirst().getBalance();
 
         new TransferPage().open()
-                .transfer(accounts.get(0).getAccountNumber(), "", accounts.get(1).getAccountNumber(), amount + 0.01, true)
+                .transfer(accounts.get(0).getAccountNumber(),
+                        "",
+                        accounts.get(1).getAccountNumber(),
+                        amount + 0.01,
+                        true)
                 .checkAlertMessageAndAccept(BankAlert.ERROR_INVALID_TRANSFER.format());
 
         softly.assertThat(SessionStorage.getSteps().getAllAccounts().get(0).getBalance()).isEqualTo(amount);
