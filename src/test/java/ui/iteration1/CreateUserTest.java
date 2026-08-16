@@ -25,7 +25,7 @@ public class CreateUserTest extends BaseUiTest {
                 .findUserByUserName(newUser.getUsername());
 
         assertThat(newUserPage)
-                .as("UserBage should exist on Dashboard after user creation")
+                .as("UserPage should exist on Dashboard after user creation")
                 .isNotNull();
 
         CreateUserResponse createdUser = AdminSteps.getAllUsers().stream()
