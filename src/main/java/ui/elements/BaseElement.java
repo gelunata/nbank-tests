@@ -9,10 +9,8 @@ import org.openqa.selenium.By;
  */
 public abstract class BaseElement {
 
-    // CHECKSTYLE:OFF: VisibilityModifier
     /** Ссылка на базовый Selenide элемент. */
     private final SelenideElement element;
-    // CHECKSTYLE:ON: VisibilityModifier
 
     /**
      * Конструктор базового элемента.
