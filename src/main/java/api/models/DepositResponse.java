@@ -2,8 +2,6 @@ package api.models;
 
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor

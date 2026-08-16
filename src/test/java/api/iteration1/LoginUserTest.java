@@ -2,10 +2,10 @@ package api.iteration1;
 
 import api.models.CreateUserRequest;
 import api.models.UserLoginRequest;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
 import api.requests.steps.AdminSteps;
 import api.requests.steps.AuthSteps;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
 
 public class LoginUserTest {
     @Test

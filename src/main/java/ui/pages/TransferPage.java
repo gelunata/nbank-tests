@@ -8,7 +8,6 @@ import lombok.Getter;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 
 @Getter

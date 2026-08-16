@@ -19,10 +19,6 @@
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
 
-        <!-- Запрет на неиспользуемые импорты (очищает код) -->
-        <module name="UnusedImports"/>
-        <module name="AvoidStarImport"/>
-
         <!-- JavadocVariable, MissingJavadocMethod, DesignForExtension ИСКЛЮЧЕНЫ -->
     </module>
 </module>
