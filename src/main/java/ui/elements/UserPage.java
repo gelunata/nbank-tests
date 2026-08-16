@@ -18,7 +18,7 @@ public class UserPage extends BaseElement {
      *
      * @param element корневой элемент страницы или контекста
      */
-    public UserPage(SelenideElement element) {
+    public UserPage(final SelenideElement element) {
         super(element);
         username = element.getText().split("\n")[0];
         role = element.getText().split("\n")[1];

@@ -8,9 +8,11 @@ import org.openqa.selenium.By;
  * Базовый класс для всех элементов интерфейса.
  */
 public abstract class BaseElement {
+
+    // CHECKSTYLE:OFF: VisibilityModifier
     /** Ссылка на базовый Selenide элемент. */
-    @SuppressWarnings("checkstyle:VisibilityModifier")
     protected final SelenideElement element;
+    // CHECKSTYLE:ON: VisibilityModifier
 
     /**
      * Конструктор базового элемента.
@@ -41,10 +43,22 @@ public abstract class BaseElement {
         return element.find(cssSelector);
     }
 
+    /**
+     * Поиск коллекции вложенных элементов по локатору By.
+     *
+     * @param selector локатор элементов
+     * @return коллекция найденных элементов
+     */
     protected final ElementsCollection findAll(final By selector) {
         return element.findAll(selector);
     }
 
+    /**
+     * Поиск коллекции вложенных элементов по CSS селектору.
+     *
+     * @param cssSelector CSS селектор элементов
+     * @return коллекция найденных элементов
+     */
     protected final ElementsCollection findAll(final String cssSelector) {
         return element.findAll(cssSelector);
     }

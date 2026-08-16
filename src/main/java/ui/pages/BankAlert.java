@@ -5,8 +5,12 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.Locale;
 
+/**
+ * Перечисление, содержащее ожидаемые тексты уведомлений (алертов) банковской системы.
+ */
 @Getter
 public enum BankAlert {
+    // CHECKSTYLE:OFF: JavadocVariable
     USER_CREATED_SUCCESSFULLY("✅ User created successfully!"),
     USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS("Username must be between 3 and 15 characters"),
     NEW_ACCOUNT_CREATED("✅ New Account Created! Account Number: "),
@@ -20,12 +24,24 @@ public enum BankAlert {
     NAME_UPDATE_SUCCESSFULLY("✅ Name updated successfully!"),
     NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY("Name must contain two words with letters only");
 
+    /** Текст сообщения уведомления. */
     private final String message;
 
+    /**
+     * Конструктор для элементов перечисления.
+     *
+     * @param message text
+     */
     BankAlert(String message) {
         this.message = message;
     }
 
+    /**
+     * Форматирует строку уведомления с подстановкой переданных аргументов.
+     *
+     * @param args аргументы для форматирования строки
+     * @return отформатированный текст уведомления
+     */
     public String format(Object... args) {
         Object[] newArgs = Arrays.stream(args).map(arg -> {
                     if (arg instanceof Double) {
