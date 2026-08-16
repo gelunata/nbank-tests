@@ -18,9 +18,9 @@ public final class TransferExtension implements BeforeEachCallback {
             int authRecipient = annotation.authRecipient();
 
             AccountResponse accountSender = SessionStorage.getSteps(authSender).getAllAccounts().getFirst();
-            long accountRecipientId = authSender == authRecipient ?
-                    SessionStorage.getSteps(authSender).getAllAccounts().get(1).getId() :
-                    SessionStorage.getSteps(authRecipient).getAllAccounts().getFirst().getId();
+            long accountRecipientId = authSender == authRecipient
+                    ? SessionStorage.getSteps(authSender).getAllAccounts().get(1).getId()
+                    : SessionStorage.getSteps(authRecipient).getAllAccounts().getFirst().getId();
 
             CreateUserRequest userSender = SessionStorage.getUser(authSender);
             String authHeaderSender = RequestSpecs.getUserAuthHeader(userSender.getUsername(), userSender.getPassword());
