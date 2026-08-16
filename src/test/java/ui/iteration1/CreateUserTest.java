@@ -20,11 +20,11 @@ public class CreateUserTest extends BaseUiTest {
     public void adminCanCreateUserTest() {
         CreateUserRequest newUser = AdminSteps.createUserRequest();
 
-        UserPage newUserBage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
+        UserPage newUserPage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
                 .checkAlertMessageAndAccept(BankAlert.USER_CREATED_SUCCESSFULLY.getMessage())
                 .findUserByUserName(newUser.getUsername());
 
-        assertThat(newUserBage)
+        assertThat(newUserPage)
                 .as("UserBage should exist on Dashboard after user creation")
                 .isNotNull();
 
