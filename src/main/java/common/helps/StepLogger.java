@@ -18,7 +18,7 @@ import io.qameta.allure.Allure;
         "post log"
 
  */
-public class StepLogger {
+public final class StepLogger {
     /**
      * Функциональный интерфейс для выполнения действий, возвращающих результат и способных выбросить исключение.
      *
@@ -63,7 +63,7 @@ public class StepLogger {
      * @param runnable выполняемое действие с результатом
      * @return результат выполнения переданного действия
      */
-    public static <T> T log(String title, ThrowableRunnable<T> runnable) {
+    public static <T> T log(final String title, final ThrowableRunnable<T> runnable) {
         return Allure.step(title, () -> runnable.run());
     }
 

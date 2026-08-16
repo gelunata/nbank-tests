@@ -9,9 +9,9 @@ import common.storage.SessionStorage;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class DepositExtension implements BeforeEachCallback {
+public final class DepositExtension implements BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         Deposit annotation = context.getRequiredTestMethod().getAnnotation(Deposit.class);
         if (annotation != null) {
             int auth = annotation.auth();
