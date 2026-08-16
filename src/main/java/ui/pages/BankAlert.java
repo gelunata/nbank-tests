@@ -6,19 +6,30 @@ import java.util.Locale;
 /**
  * Перечисление, содержащее ожидаемые тексты уведомлений (алертов) банковской системы.
  */
-@SuppressWarnings("checkstyle:JavadocVariable")
 public enum BankAlert {
+    /** Успешное создание пользователя. */
     USER_CREATED_SUCCESSFULLY,
+    /** Ошибка длины имени пользователя. */
     USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS,
+    /** Успешное создание нового счета. */
     NEW_ACCOUNT_CREATED,
+    /** Успешный депозит на счет. */
     SUCCESSFULLY_DEPOSITED_TO_ACCOUNT,
+    /** Ошибка превышения лимита депозита. */
     PLEASE_DEPOSIT_LESS_OR_EQUAL_TO_5000,
+    /** Ошибка: счет не выбран. */
     PLEASE_SELECT_AN_ACCOUNT,
+    /** Успешный перевод на счет. */
     SUCCESSFULLY_TRANSFERRED_TO_ACCOUNT,
+    /** Ошибка невалидного перевода. */
     ERROR_INVALID_TRANSFER,
+    /** Ошибка пустых полей. */
     PLEASE_FILL_ALL_FIELDS_AND_CONFIRM,
+    /** Успешный перевод между счетами. */
     TRANSFER_SUCCESSFUL_FROM_ACCOUNT_TO_ACCOUNT,
+    /** Успешное обновление имени. */
     NAME_UPDATE_SUCCESSFULLY,
+    /** Ошибка формата имени (должно быть два слова). */
     NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY;
 
     /**
