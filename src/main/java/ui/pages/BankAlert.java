@@ -10,7 +10,6 @@ import java.util.Locale;
  */
 @Getter
 public enum BankAlert {
-    // CHECKSTYLE:OFF: JavadocVariable
     USER_CREATED_SUCCESSFULLY("✅ User created successfully!"),
     USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS("Username must be between 3 and 15 characters"),
     NEW_ACCOUNT_CREATED("✅ New Account Created! Account Number: "),
@@ -25,15 +24,15 @@ public enum BankAlert {
     NAME_MUST_CONTAIN_TWO_WORDS_WITH_LETTERS_ONLY("Name must contain two words with letters only");
 
     /** Текст сообщения уведомления. */
-    private final String message;
+    private final String value;
 
     /**
      * Конструктор для элементов перечисления.
      *
-     * @param message text
+     * @param value text
      */
-    BankAlert(String message) {
-        this.message = message;
+    BankAlert(final String value) {
+        this.value = value;
     }
 
     /**
