@@ -19,10 +19,22 @@ public abstract class BaseElement {
         this.element = element;
     }
 
+    /**
+     * Поиск вложенного элемента по локатору By.
+     *
+     * @param selector локатор элемента
+     * @return найденный вложенный элемент
+     */
     protected SelenideElement find(By selector) {
         return element.find(selector);
     }
 
+    /**
+     * Поиск вложенного элемента по CSS селектору.
+     *
+     * @param cssSelector CSS селектор элемента
+     * @return найденный вложенный элемент
+     */
     protected SelenideElement find(String cssSelector) {
         return element.find(cssSelector);
     }

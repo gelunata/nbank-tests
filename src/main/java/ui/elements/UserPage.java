@@ -3,10 +3,10 @@ package ui.elements;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
-@Getter
 /**
  * Класс страницы пользователя.
  */
+@Getter
 public class UserPage extends BaseElement {
     /** Элемент отображения имени пользователя. */
     private final String username;
