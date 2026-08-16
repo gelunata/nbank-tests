@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+    /** Карта для сохранения времени начала выполнения каждого теста. */
     private final Map<String, Long> startTimes = new HashMap<>();
 
     @Override

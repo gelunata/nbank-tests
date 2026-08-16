@@ -4,9 +4,17 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+/**
+ * Базовый класс для всех элементов интерфейса.
+ */
 public abstract class BaseElement {
     protected final SelenideElement element;
 
+    /**
+     * Конструктор базового элемента.
+     *
+     * @param element инициализирующий элемент локатора
+     */
     public BaseElement(SelenideElement element) {
         this.element = element;
     }

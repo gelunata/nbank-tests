@@ -4,10 +4,20 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
 @Getter
+/**
+ * Класс страницы пользователя.
+ */
 public class UserPage extends BaseElement {
-    private String username;
-    private String role;
+    /** Элемент отображения имени пользователя. */
+    private final String username;
+    /** Элемент отображения роли пользователя. */
+    private final String role;
 
+    /**
+     * Конструктор страницы пользователя.
+     *
+     * @param element корневой элемент страницы или контекста
+     */
     public UserPage(SelenideElement element) {
         super(element);
         username = element.getText().split("\n")[0];

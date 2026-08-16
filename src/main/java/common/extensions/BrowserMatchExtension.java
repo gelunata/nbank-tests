@@ -8,10 +8,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.Arrays;
 
-public class BrowserMatchExtension implements ExecutionCondition {
+public final class BrowserMatchExtension implements ExecutionCondition {
 
     @Override
-    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+    public ConditionEvaluationResult evaluateExecutionCondition(final ExtensionContext context) {
         Browsers annotation = context.getElement()
                 .map(el -> el.getAnnotation(Browsers.class))
                 .orElse(null);

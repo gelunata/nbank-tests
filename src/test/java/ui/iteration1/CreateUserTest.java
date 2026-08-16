@@ -7,7 +7,7 @@ import api.requests.steps.AdminSteps;
 import common.annotations.AdminSession;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
-import ui.elements.UserBage;
+import ui.elements.UserPage;
 import ui.pages.AdminPanel;
 import ui.pages.BankAlert;
 
@@ -20,7 +20,7 @@ public class CreateUserTest extends BaseUiTest {
     public void adminCanCreateUserTest() {
         CreateUserRequest newUser = AdminSteps.createUserRequest();
 
-        UserBage newUserBage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
+        UserPage newUserBage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
                 .checkAlertMessageAndAccept(BankAlert.USER_CREATED_SUCCESSFULLY.getMessage())
                 .findUserByUserName(newUser.getUsername());
 
