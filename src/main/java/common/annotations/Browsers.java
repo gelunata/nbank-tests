@@ -8,5 +8,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Browsers {
+    /**
+     * Список поддерживаемых браузеров для теста.
+     *
+     * @return массив названий браузеров
+     */
     String[] value();
 }

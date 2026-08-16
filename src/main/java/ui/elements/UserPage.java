@@ -4,11 +4,11 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
 @Getter
-public class UserBage extends BaseElement {
+public class UserPage extends BaseElement {
     private String username;
     private String role;
 
-    public UserBage(SelenideElement element) {
+    public UserPage(SelenideElement element) {
         super(element);
         username = element.getText().split("\n")[0];
         role = element.getText().split("\n")[1];
