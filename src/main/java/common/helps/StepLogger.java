@@ -73,7 +73,7 @@ public final class StepLogger {
      * @param title    заголовок шага для Allure
      * @param runnable выполняемое действие без результата
      */
-    public static void log(String title, ThrowableVoidRunnable runnable) {
+    public static void log(final String title, final ThrowableVoidRunnable runnable) {
         Allure.step(title, () -> {
             runnable.run();
             return null;

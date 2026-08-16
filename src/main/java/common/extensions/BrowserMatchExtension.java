@@ -28,7 +28,7 @@ public class BrowserMatchExtension implements ExecutionCondition {
             return ConditionEvaluationResult.enabled("Текущий браузер удовлетворяет условию: " + currentBrowser);
         }
 
-        return ConditionEvaluationResult.disabled("Тест пропущен, так как текущий браузер " + currentBrowser +
-                " не находится в списке допустимых браузеров для теста: " + Arrays.toString(annotation.value()));
+        return ConditionEvaluationResult.disabled("Тест пропущен, так как текущий браузер " + currentBrowser
+                + " не находится в списке допустимых браузеров для теста: " + Arrays.toString(annotation.value()));
     }
 }
