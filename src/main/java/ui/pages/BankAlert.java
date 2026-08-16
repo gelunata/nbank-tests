@@ -6,6 +6,7 @@ import java.util.Locale;
 /**
  * Перечисление, содержащее ожидаемые тексты уведомлений (алертов) банковской системы.
  */
+@SuppressWarnings("checkstyle:JavadocVariable")
 public enum BankAlert {
     USER_CREATED_SUCCESSFULLY,
     USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS,
