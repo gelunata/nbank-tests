@@ -8,15 +8,17 @@ import org.openqa.selenium.By;
  * Базовый класс для всех элементов интерфейса.
  */
 public abstract class BaseElement {
+    /** Ссылка на базовый Selenide элемент. */
+    @SuppressWarnings("checkstyle:VisibilityModifier")
     protected final SelenideElement element;
 
     /**
      * Конструктор базового элемента.
      *
-     * @param element инициализирующий элемент локатора
+     * @param rootElement инициализирующий элемент локатора
      */
-    public BaseElement(SelenideElement element) {
-        this.element = element;
+    public BaseElement(final SelenideElement rootElement) {
+        this.element = rootElement;
     }
 
     /**
@@ -25,7 +27,7 @@ public abstract class BaseElement {
      * @param selector локатор элемента
      * @return найденный вложенный элемент
      */
-    protected SelenideElement find(By selector) {
+    protected final SelenideElement find(final By selector) {
         return element.find(selector);
     }
 
@@ -35,15 +37,15 @@ public abstract class BaseElement {
      * @param cssSelector CSS селектор элемента
      * @return найденный вложенный элемент
      */
-    protected SelenideElement find(String cssSelector) {
+    protected final SelenideElement find(final String cssSelector) {
         return element.find(cssSelector);
     }
 
-    protected ElementsCollection findAll(By selector) {
+    protected final ElementsCollection findAll(final By selector) {
         return element.findAll(selector);
     }
 
-    protected ElementsCollection findAll(String cssSelector) {
+    protected final ElementsCollection findAll(final String cssSelector) {
         return element.findAll(cssSelector);
     }
 }
