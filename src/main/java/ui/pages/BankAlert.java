@@ -51,6 +51,6 @@ public enum BankAlert {
                 }
         ).toArray();
 
-        return String.format(Locale.UK, message, newArgs);
+        return String.format(Locale.UK, value, newArgs);
     }
 }
