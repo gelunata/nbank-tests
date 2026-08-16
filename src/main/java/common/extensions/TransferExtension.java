@@ -9,9 +9,9 @@ import common.storage.SessionStorage;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class TransferExtension implements BeforeEachCallback {
+public final class TransferExtension implements BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         Transfer annotation = context.getRequiredTestMethod().getAnnotation(Transfer.class);
         if (annotation != null) {
             int authSender = annotation.authSender();

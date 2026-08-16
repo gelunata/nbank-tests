@@ -11,9 +11,9 @@ import ui.pages.BasePage;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UserSessionExtension implements BeforeEachCallback {
+public final class UserSessionExtension implements BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         UserSession annotation = context.getRequiredTestMethod().getAnnotation(UserSession.class);
         if (annotation != null) {
             int userCount = annotation.value();
