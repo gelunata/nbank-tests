@@ -9,18 +9,18 @@ import common.storage.SessionStorage;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class TransferExtension implements BeforeEachCallback {
+public final class TransferExtension implements BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         Transfer annotation = context.getRequiredTestMethod().getAnnotation(Transfer.class);
         if (annotation != null) {
             int authSender = annotation.authSender();
             int authRecipient = annotation.authRecipient();
 
             AccountResponse accountSender = SessionStorage.getSteps(authSender).getAllAccounts().getFirst();
-            long accountRecipientId = authSender == authRecipient ?
-                    SessionStorage.getSteps(authSender).getAllAccounts().get(1).getId() :
-                    SessionStorage.getSteps(authRecipient).getAllAccounts().getFirst().getId();
+            long accountRecipientId = authSender == authRecipient
+                    ? SessionStorage.getSteps(authSender).getAllAccounts().get(1).getId()
+                    : SessionStorage.getSteps(authRecipient).getAllAccounts().getFirst().getId();
 
             CreateUserRequest userSender = SessionStorage.getUser(authSender);
             String authHeaderSender = RequestSpecs.getUserAuthHeader(userSender.getUsername(), userSender.getPassword());

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.Arrays;
 
-public class BrowserMatchExtension implements ExecutionCondition {
+public final class BrowserMatchExtension implements ExecutionCondition {
 
     @Override
-    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+    public ConditionEvaluationResult evaluateExecutionCondition(final ExtensionContext context) {
         Browsers annotation = context.getElement()
                 .map(el -> el.getAnnotation(Browsers.class))
                 .orElse(null);
@@ -27,9 +27,8 @@ public class BrowserMatchExtension implements ExecutionCondition {
         if (matches) {
             return ConditionEvaluationResult.enabled("Текущий браузер удовлетворяет условию: " + currentBrowser);
         }
-        {
-            return ConditionEvaluationResult.disabled("Тест пропущен, так как текущий браузер " + currentBrowser +
-                    " не находится в списке допустимых браузеров для теста: " + Arrays.toString(annotation.value()));
-        }
+
+        return ConditionEvaluationResult.disabled("Тест пропущен, так как текущий браузер " + currentBrowser
+                + " не находится в списке допустимых браузеров для теста: " + Arrays.toString(annotation.value()));
     }
 }

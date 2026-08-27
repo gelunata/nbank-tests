@@ -4,26 +4,60 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+/**
+ * Базовый класс для всех элементов интерфейса.
+ */
 public abstract class BaseElement {
-    protected final SelenideElement element;
 
-    public BaseElement(SelenideElement element) {
-        this.element = element;
+    /** Ссылка на базовый Selenide элемент. */
+    private final SelenideElement element;
+
+    /**
+     * Конструктор базового элемента.
+     *
+     * @param rootElement инициализирующий элемент локатора
+     */
+    public BaseElement(final SelenideElement rootElement) {
+        this.element = rootElement;
     }
 
-    protected SelenideElement find(By selector) {
+    /**
+     * Поиск вложенного элемента по локатору By.
+     *
+     * @param selector локатор элемента
+     * @return найденный вложенный элемент
+     */
+    protected final SelenideElement find(final By selector) {
         return element.find(selector);
     }
 
-    protected SelenideElement find(String cssSelector) {
+    /**
+     * Поиск вложенного элемента по CSS селектору.
+     *
+     * @param cssSelector CSS селектор элемента
+     * @return найденный вложенный элемент
+     */
+    protected final SelenideElement find(final String cssSelector) {
         return element.find(cssSelector);
     }
 
-    protected ElementsCollection findAll(By selector) {
+    /**
+     * Поиск коллекции вложенных элементов по локатору By.
+     *
+     * @param selector локатор элементов
+     * @return коллекция найденных элементов
+     */
+    protected final ElementsCollection findAll(final By selector) {
         return element.findAll(selector);
     }
 
-    protected ElementsCollection findAll(String cssSelector) {
+    /**
+     * Поиск коллекции вложенных элементов по CSS селектору.
+     *
+     * @param cssSelector CSS селектор элементов
+     * @return коллекция найденных элементов
+     */
+    protected final ElementsCollection findAll(final String cssSelector) {
         return element.findAll(cssSelector);
     }
 }

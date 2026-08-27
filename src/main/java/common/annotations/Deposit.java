@@ -8,6 +8,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Deposit {
-    double value() default -1 ;
+    /**
+     * Сумма совершаемого депозита.
+     *
+     * @return сумма депозита
+     */
+    double value() default -1;
+
+    /**
+     * Порядковый номер пользователя для начисления депозита.
+     *
+     * @return номер пользователя
+     */
     int auth() default 1;
 }

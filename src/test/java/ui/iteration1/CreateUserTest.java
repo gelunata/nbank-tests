@@ -7,7 +7,7 @@ import api.requests.steps.AdminSteps;
 import common.annotations.AdminSession;
 import org.junit.jupiter.api.Test;
 import ui.BaseUiTest;
-import ui.elements.UserBage;
+import ui.elements.UserPage;
 import ui.pages.AdminPanel;
 import ui.pages.BankAlert;
 
@@ -20,12 +20,12 @@ public class CreateUserTest extends BaseUiTest {
     public void adminCanCreateUserTest() {
         CreateUserRequest newUser = AdminSteps.createUserRequest();
 
-        UserBage newUserBage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
+        UserPage newUserPage = new AdminPanel().open().createUser(newUser.getUsername(), newUser.getPassword())
                 .checkAlertMessageAndAccept(BankAlert.USER_CREATED_SUCCESSFULLY.getMessage())
                 .findUserByUserName(newUser.getUsername());
 
-        assertThat(newUserBage)
-                .as("UserBage should exist on Dashboard after user creation")
+        assertThat(newUserPage)
+                .as("UserPage should exist on Dashboard after user creation")
                 .isNotNull();
 
         CreateUserResponse createdUser = AdminSteps.getAllUsers().stream()
@@ -45,7 +45,7 @@ public class CreateUserTest extends BaseUiTest {
                 .checkAlertMessageAndAccept(BankAlert.USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS.getMessage())
                 .getAllUsers()
                 .stream()
-                .noneMatch(userBage -> userBage.getUsername().equals(newUser.getUsername())));
+                .noneMatch(userPage -> userPage.getUsername().equals(newUser.getUsername())));
 
         long usersWithSameUsernameAsNewUser = AdminSteps.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))

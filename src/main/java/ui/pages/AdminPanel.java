@@ -5,7 +5,7 @@ import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
 import common.utils.RetryUtils;
 import lombok.Getter;
-import ui.elements.UserBage;
+import ui.elements.UserPage;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ public class AdminPanel extends BasePage<AdminPanel> {
         return this;
     }
 
-    public List<UserBage> getAllUsers() {
+    public List<UserPage> getAllUsers() {
         ElementsCollection elementsCollection = $(Selectors.byText("All Users")).parent().findAll("li");
-        return generatePageElements(elementsCollection, UserBage::new);
+        return generatePageElements(elementsCollection, UserPage::new);
     }
 
-    public UserBage findUserByUserName(String username) {
+    public UserPage findUserByUserName(String username) {
         return RetryUtils.retry(
                 () -> getAllUsers().stream().filter(it -> it.getUsername().equals(username)).findAny().orElse(null),
                 result -> result != null,

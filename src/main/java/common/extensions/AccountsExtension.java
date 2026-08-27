@@ -11,9 +11,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.Map;
 
-public class AccountsExtension implements BeforeEachCallback {
+public final class AccountsExtension implements BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         Accounts annotation = context.getRequiredTestMethod().getAnnotation(Accounts.class);
         if (annotation != null) {
             int accountCount = annotation.value();

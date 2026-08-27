@@ -9,9 +9,12 @@ import common.storage.SessionStorage;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class DepositExtension implements BeforeEachCallback {
+public final class DepositExtension implements BeforeEachCallback {
+    /** Лимит разового пополнения счета. */
+    private static final double DEPOSIT_LIMIT = 5000.0;
+
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) throws Exception {
         Deposit annotation = context.getRequiredTestMethod().getAnnotation(Deposit.class);
         if (annotation != null) {
             int auth = annotation.auth();
@@ -26,8 +29,8 @@ public class DepositExtension implements BeforeEachCallback {
             } else {
                 double amount = annotation.value();
                 do {
-                    AccountSteps.depositMoney(authHeader, accountId, 5000);
-                    amount -= 5000;
+                    AccountSteps.depositMoney(authHeader, accountId, DEPOSIT_LIMIT);
+                    amount -= DEPOSIT_LIMIT;
                 } while (amount > 0);
             }
         }

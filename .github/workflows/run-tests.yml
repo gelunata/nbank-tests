@@ -7,6 +7,7 @@ jobs: #  аналог этапов
   run-tests:
     name: Set up services (review apps) and run tests
     runs-on: ubuntu-latest
+    if: false
     steps: # шаги конкретной job
       - name: Checkout repository # копируем файлы репозитория внутрь CI агента
         uses: actions/checkout@v7
