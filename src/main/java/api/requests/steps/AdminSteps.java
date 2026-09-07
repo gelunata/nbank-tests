@@ -2,6 +2,7 @@ package api.requests.steps;
 
 import api.generators.RandomData;
 import api.generators.RandomModelGenerator;
+import api.helpers.StepLogger;
 import api.models.CreateUserRequest;
 import api.models.CreateUserResponse;
 import api.models.UserRole;
@@ -37,29 +38,32 @@ public class AdminSteps {
 
     public static String createUser(String username, String password) {
         CreateUserRequest userRequest = createUserRequest(username, password);
-        return new CrudRequester(
-                RequestSpecs.adminSpec(),
-                Endpoint.ADMIN_USER,
-                ResponseSpecs.entityWasCreated())
-                .post(userRequest)
-                .extract()
+        return StepLogger.log("Admin creates user " + username, () ->
+                        new CrudRequester(
+                                RequestSpecs.adminSpec(),
+                                Endpoint.ADMIN_USER,
+                                ResponseSpecs.entityWasCreated())
+                                .post(userRequest)
+                                .extract())
                 .header(ResponseSpecs.AUTHORIZATION_HEADER);
     }
 
     public static CreateUserResponse createUser(CreateUserRequest userRequest) {
-        return new ValidatedCrudRequester<CreateUserResponse>(
-                RequestSpecs.adminSpec(),
-                Endpoint.ADMIN_USER,
-                ResponseSpecs.entityWasCreated())
-                .post(userRequest);
+        return StepLogger.log("Admin creates user " + userRequest.getUsername(), () ->
+                new ValidatedCrudRequester<CreateUserResponse>(
+                        RequestSpecs.adminSpec(),
+                        Endpoint.ADMIN_USER,
+                        ResponseSpecs.entityWasCreated())
+                        .post(userRequest));
     }
 
     public static List<CreateUserResponse> getAllUsers() {
-        return new ValidatedCrudRequester<CreateUserResponse>(
-                RequestSpecs.adminSpec(),
-                Endpoint.ADMIN_USER,
-                ResponseSpecs.requestReturnsOK())
-                .getAll(CreateUserResponse[].class);
+        return StepLogger.log("Admin gets all users", () ->
+                new ValidatedCrudRequester<CreateUserResponse>(
+                        RequestSpecs.adminSpec(),
+                        Endpoint.ADMIN_USER,
+                        ResponseSpecs.requestReturnsOK())
+                        .getAll(CreateUserResponse[].class));
     }
 
     public static boolean hasUser(String username) {
