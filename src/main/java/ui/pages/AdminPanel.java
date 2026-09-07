@@ -1,5 +1,6 @@
 package ui.pages;
 
+import api.helpers.StepLogger;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
@@ -29,12 +30,14 @@ public class AdminPanel extends BasePage<AdminPanel> {
     }
 
     public List<UserPage> getAllUsers() {
-        ElementsCollection elementsCollection = $(Selectors.byText("All Users")).parent().findAll("li");
-        return generatePageElements(elementsCollection, UserPage::new);
+        return StepLogger.log("Get all users from Dashboard", () -> {
+            ElementsCollection elementsCollection = $(Selectors.byText("All Users")).parent().findAll("li");
+            return generatePageElements(elementsCollection, UserPage::new);
+        });
     }
 
     public UserPage findUserByUserName(String username) {
-        return RetryUtils.retry(
+        return RetryUtils.retry("Find user by username " + username,
                 () -> getAllUsers().stream().filter(it -> it.getUsername().equals(username)).findAny().orElse(null),
                 result -> result != null,
                 3,

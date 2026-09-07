@@ -4,6 +4,7 @@ import api.config.Config;
 import api.models.UserLoginRequest;
 import api.requests.skelethon.Endpoint;
 import api.requests.skelethon.requesters.CrudRequester;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -26,7 +27,8 @@ public class RequestSpecs {
                 .setAccept(ContentType.JSON)
                 .addFilters(List.of(
                         new RequestLoggingFilter(),
-                        new ResponseLoggingFilter()))
+                        new ResponseLoggingFilter(),
+                        new AllureRestAssured()))
                 .setBaseUri(Config.getProperty("apiBaseUrl") + Config.getProperty("apiVersion"));
     }
 

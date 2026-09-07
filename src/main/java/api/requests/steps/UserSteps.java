@@ -1,5 +1,6 @@
 package api.requests.steps;
 
+import api.helpers.StepLogger;
 import api.models.AccountResponse;
 import api.requests.skelethon.Endpoint;
 import api.requests.skelethon.requesters.ValidatedCrudRequester;
@@ -19,12 +20,14 @@ public class UserSteps {
     }
 
     public List<AccountResponse> getAllAccounts() {
-        List<AccountResponse> accounts = new ValidatedCrudRequester<AccountResponse>(
-                RequestSpecs.authAsUser(username, password),
-                Endpoint.CUSTOMER_ACCOUNTS,
-                ResponseSpecs.requestReturnsOK())
-                .getAll(AccountResponse[].class);
-        accounts.sort(Comparator.comparing(AccountResponse::getId));
-        return accounts;
+        return StepLogger.log("User " + username + " get all accounts", () -> {
+            List<AccountResponse> accounts = new ValidatedCrudRequester<AccountResponse>(
+                    RequestSpecs.authAsUser(username, password),
+                    Endpoint.CUSTOMER_ACCOUNTS,
+                    ResponseSpecs.requestReturnsOK())
+                    .getAll(AccountResponse[].class);
+            accounts.sort(Comparator.comparing(AccountResponse::getId));
+            return accounts;
+        });
     }
 }
