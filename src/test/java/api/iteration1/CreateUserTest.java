@@ -12,6 +12,7 @@ import api.requests.steps.AdminSteps;
 import api.requests.steps.DataBaseSteps;
 import api.specs.RequestSpecs;
 import api.specs.ResponseSpecs;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -56,7 +57,7 @@ public class CreateUserTest extends BaseTest {
     }
 
     @MethodSource("userInvalidData")
-    //@ParameterizedTest
+    @ParameterizedTest
     public void adminCanNotCreateUserWithInvalidData(String username, String password, String errorKey, List<String> errorValues) {
         CreateUserRequest createUserRequest = AdminSteps.createUserRequest(username, password);
 
