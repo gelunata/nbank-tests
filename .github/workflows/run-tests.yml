@@ -54,6 +54,7 @@ jobs: #  аналог этапов
           gh_pages: gh-pages
           allure_results: target/allure-results
           allure_history: allure-history
+          allure_report: allure_report
 
       - name: Build Swagger coverage report
         if: always()
@@ -62,7 +63,7 @@ jobs: #  аналог этапов
       - name: Quality Gate (Check API Coverage)
         if: always()
         run: |
-          ./mvnw allure:report -q
+          sudo chown -R $USER:$USER allure-report
           
           REPORT="allure-history/${{ github.run_number }}/widgets/coverage.json"
           COVERAGE=$(jq '.percentage' "$REPORT")
