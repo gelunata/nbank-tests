@@ -62,7 +62,7 @@ jobs: #  аналог этапов
       - name: Quality Gate (Check API Coverage)
         if: always()
         run: |
-          mvnw allure:report -q
+          ./mvnw allure:report -q
           
           REPORT="allure-history/${{ github.run_number }}/widgets/coverage.json"
           COVERAGE=$(jq '.percentage' "$REPORT")
