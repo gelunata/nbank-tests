@@ -65,7 +65,7 @@ jobs: #  аналог этапов
         run: |
           sudo chown -R $USER:$USER allure-report
           
-          REPORT="allure-history/${{ github.run_number }}/widgets/coverage.json"
+          REPORT="allure-history/widgets/coverage.json"
           COVERAGE=$(jq '.percentage' "$REPORT")
           
           if (( $(echo "$COVERAGE < 50" | bc -l) )); then
