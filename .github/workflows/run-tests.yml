@@ -42,9 +42,7 @@ jobs: #  аналог этапов
 
       - name: Quality Gate — API Coverage
         if: always()
-        run: |
-          find . -name "swagger-coverage-results.json" -print
-          bash check-coverage.sh
+        run: bash check-coverage.sh
         env:
           COVERAGE_THRESHOLD: "50"
 

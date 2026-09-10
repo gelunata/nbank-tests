@@ -4,13 +4,14 @@ set -euo pipefail
 THRESHOLD="${COVERAGE_THRESHOLD:-50}"
 FILE="swagger-coverage-results.json"
 
-TOTAL=$(jq '[.[]] | length' "$FILE")
-COVERED=$(jq '[.[] | select(.state == "FULL" or .state == "PARTY")] | length' "$FILE")
-COVERAGE=$(echo "scale=2; $COVERED * 100 / $TOTAL" | bc -l)
+TOTAL=$(jq '.conditionCounter.all' "$FILE")
+COVERED=$(jq '.conditionCounter.covered' "$FILE")
 
-echo "Покрытие API: ${COVERAGE}% (порог: ${THRESHOLD}%)"
+echo "Условий: $TOTAL, покрыто: $COVERED, порог: ${THRESHOLD}%"
 
-if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+if (( COVERED * 100 < TOTAL * THRESHOLD )); then
   echo "❌ Quality Gate FAILED"
   exit 1
 fi
+
+echo "✅ Quality Gate PASSED"
