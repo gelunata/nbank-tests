@@ -40,6 +40,11 @@ jobs: #  аналог этапов
         if: always()
         run: .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://localhost:4111/v3/api-docs -i target/swagger-coverage-output
 
+      - name: Quality Gate — API Coverage
+        run: ./check-coverage.sh
+        env:
+          COVERAGE_THRESHOLD: "50"
+
       - name: Load test report history
         uses: actions/checkout@v2
         if: always()
@@ -54,24 +59,10 @@ jobs: #  аналог этапов
           gh_pages: gh-pages
           allure_results: target/allure-results
           allure_history: allure-history
-          allure_report: allure_report
 
       - name: Build Swagger coverage report
         if: always()
         run: sudo cp swagger-coverage-report.html allure-history/${{ github.run_number }}
-
-      - name: Quality Gate (Check API Coverage)
-        if: always()
-        run: |
-          sudo chown -R $USER:$USER allure-report
-          
-          REPORT="allure-history/widgets/coverage.json"
-          COVERAGE=$(jq '.percentage' "$REPORT")
-          
-          if (( $(echo "$COVERAGE < 50" | bc -l) )); then
-          echo "Quality gate failed: API coverage is less than 50%"
-          exit 1
-          fi
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
