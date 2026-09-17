@@ -23,6 +23,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 4111
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://nbank-postgres:5432/nbank"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
 ---
 apiVersion: v1
 kind: Service
