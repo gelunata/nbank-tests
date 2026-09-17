@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi # объем диска для хранения данных БД
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nbank-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nbank-postgres # связываем Deployment и Pod
+  template:
+    metadata:
+      labels:
+        app: nbank-postgres # устанавливаем label на Pod
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432 # стандартный порт PostgreSQL внутри контейнера
+          env:
+            - name: POSTGRES_DB
+              value: "nbank"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres" # в проде лучше использовать Secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data # куда монтируем внутри контейнера
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc # связываем диск с подом
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nbank-postgres # это имя будет использоваться бэкендом как хост для подключения!
+  labels:
+    app: nbank-postgres
+spec:
+  selector:
+    app: nbank-postgres # Сервис направляет трафик на поды базы данных
+  ports:
+    - protocol: TCP
+      port: 5432 # порт сервиса внутри кластера
+      targetPort: 5432 # порт контейнера
+  type: ClusterIP # Базу данных не нужно выставлять наружу (NodePort), она должна быть доступна только бэкенду внутри кластера
+
+#  СХЕМА ВЗАИМОДЕЙСТВИЯ С БЭКЕНДОМ:
+#  [Pod Backend] -> делает запрос к БД по адресу jdbc:postgresql://nbank-postgres:5432/nbank
+#  |
+#  [Service nbank-postgres (ClusterIP:5432)]
+#  |
+#  [Pod Postgres (port 5432)]
+#  |
+#  Данные пишутся на [PersistentVolumeClaim: postgres-pvc]
