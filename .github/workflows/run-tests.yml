@@ -44,7 +44,7 @@ jobs: #  аналог этапов
         if: always()
         run: bash check-coverage.sh
         env:
-          COVERAGE_THRESHOLD: "40"
+          COVERAGE_THRESHOLD: "50"
 
       - name: Load test report history
         uses: actions/checkout@v2
