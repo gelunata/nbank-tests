@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# ШАГ 1: поднятие сервисов приложения
+
 # Запустили локальный Kubernetes-кластер с помощью minikube, используя Docker как драйвер
 # (кластер будет запущен внутри докер контейнера)
 minikube start --driver=docker
@@ -10,6 +12,8 @@ kubectl create configmap selenoid-config --from-file=browsers.json=./nbank-chart
 # Устанавливаем Helm чарт с именем релиза nbank, беря шаблоны из ./nbank-chart
 # Это создаст все ресурсы, описанные в шаблонах Helm (Deployment, Service)
 helm install nbank ./nbank-chart
+# если уже был install, то для переустановки делаем эту команду
+# helm upgrade --install nbank ./nbank-chart --force-conflicts
 
 # Все сервисы в namespace=default
 kubectl get svc
@@ -25,3 +29,15 @@ kubectl port-forward svc/frontend 3000:80 # /dev/null 2>&1 (проброс по�
 kubectl port-forward svc/backend 4111:4111
 kubectl port-forward svc/selenoid 4444:4444
 kubectl port-forward svc/selenoid-ui 8080:8080
+
+# ШАГ 2: поднятие сервисов мониторинга
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true
+helm repo add elastic https://helm.elastic.co || true
+helm repo update
+
+helm upgrade --install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace -f monitoring-values.yaml
+
+# Пробрасываем порт к прометеусу и графане
+kubectl port-forward svc/monitoring-kube-prometheus-prometheus -n monitoring 3001:9090 # /dev/null 2>&1
+kubectl port-forward svc/monitoring-kube-grafana -n monitoring 3002:80
