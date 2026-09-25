@@ -40,4 +40,10 @@ helm upgrade --install monitoring prometheus-community/kube-prometheus-stack -n 
 
 # Пробрасываем порт к прометеусу и графане
 kubectl port-forward svc/monitoring-kube-prometheus-prometheus -n monitoring 3001:9090 # /dev/null 2>&1
-kubectl port-forward svc/monitoring-kube-grafana -n monitoring 3002:80
+kubectl port-forward svc/monitoring-grafana -n monitoring 3002:80
+
+# Создаем секреты для авторизации на бекенде
+kubectl create secret generic backend-basic-auth --from-literal=username=admin --from-literal=password=admin -n monitoring
+
+# Применяем yaml с настройками SpringMonitoring за бекендом
+kubectl apply -f spring-monitoring.yaml
